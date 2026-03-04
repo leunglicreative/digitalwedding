@@ -1,0 +1,273 @@
+---
+/**
+ * KONFIGURASI WISHES (PAGINATION)
+ * - Bagian ini menggunakan localStorage untuk menyimpan pesan sementara.
+ * - Pagination diatur untuk menampilkan 2 pesan per halaman.
+ */
+---
+
+<section id="wish" class="py-20 bg-soft-white px-4">
+    <div class="max-w-4xl mx-auto">
+        <h2 class="font-serif text-4xl text-gold text-center mb-16 italic">
+            Best Wishes
+        </h2>
+
+        <!-- Form Pengiriman Pesan -->
+        <div
+            class="bg-white p-8 rounded-2xl shadow-xl border border-gold/10 mb-12"
+        >
+            <form id="wish-form" class="space-y-4">
+                <div>
+                    <input
+                        type="text"
+                        id="wish-name"
+                        placeholder="Nama Anda"
+                        required
+                        class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gold outline-none transition-all"
+                    />
+                </div>
+                <div>
+                    <textarea
+                        id="wish-message"
+                        rows="4"
+                        placeholder="Tulis ucapan & doa restu..."
+                        required
+                        class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gold outline-none transition-all"
+                    ></textarea>
+                </div>
+                <button
+                    type="submit"
+                    class="w-full md:w-auto bg-gold text-white px-10 py-3 rounded-full font-bold uppercase tracking-widest hover:bg-[#b8952d] hover:shadow-lg active:scale-95 transition-all"
+                >
+                    Kirim Ucapan
+                </button>
+            </form>
+        </div>
+
+        <!-- Area Tampilan Daftar Ucapan (Dinamis) -->
+        <div id="wishes-container" class="space-y-6">
+            <!-- Pesan akan dimunculkan di sini lewat JavaScript -->
+            <div class="text-center py-10 text-gray-400 italic">
+                Belum ada ucapan. Jadilah yang pertama memberikan doa!
+            </div>
+        </div>
+
+        <!-- Navigasi Pagination -->
+        <div
+            id="wish-pagination"
+            class="justify-center items-center gap-2 mt-12 hidden"
+        >
+            <button
+                id="prev-page"
+                class="p-2 border border-gold text-gold rounded-full hover:bg-gold hover:text-white transition-all disabled:opacity-30 disabled:pointer-events-none"
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </button>
+
+            <div id="page-numbers" class="flex gap-2">
+                <!-- Angka halaman akan muncul di sini -->
+            </div>
+
+            <button
+                id="next-page"
+                class="p-2 border border-gold text-gold rounded-full hover:bg-gold hover:text-white transition-all disabled:opacity-30 disabled:pointer-events-none"
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M9 5l7 7-7 7"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+</section>
+
+<script>
+    // --- LOGIKA WISHES & PAGINATION ---
+
+    // 1. Inisialisasi Data
+    const ITEMS_PER_PAGE = 5; // Tampilkan 5 pesan per halaman
+    let currentPage = 1;
+
+    const form = document.getElementById("wish-form") as HTMLFormElement;
+    const container = document.getElementById("wishes-container");
+    const pagination = document.getElementById("wish-pagination");
+    const pageNumbers = document.getElementById("page-numbers");
+    const prevBtn = document.getElementById("prev-page") as HTMLButtonElement;
+    const nextBtn = document.getElementById("next-page") as HTMLButtonElement;
+
+    // 2. Fungsi Ambil Data dari LocalStorage
+    function getWishes() {
+        const saved = localStorage.getItem("wedding_wishes");
+        return saved ? JSON.parse(saved) : [];
+    }
+
+    // 3. Fungsi Render Wishes
+    function renderWishes() {
+        const allWishes = getWishes();
+        if (!container) return;
+
+        if (allWishes.length === 0) {
+            container.innerHTML =
+                '<div class="text-center py-10 text-gray-400 italic">Belum ada ucapan. Jadilah yang pertama memberikan doa!</div>';
+            pagination?.classList.add("hidden");
+            return;
+        }
+
+        // Hitung index data untuk halaman aktif
+        const totalPages = Math.ceil(allWishes.length / ITEMS_PER_PAGE);
+
+        // Validasi halaman aktif agar tidak out of bounds
+        if (currentPage > totalPages) currentPage = totalPages;
+        if (currentPage < 1) currentPage = 1;
+
+        const start = (currentPage - 1) * ITEMS_PER_PAGE;
+        const end = start + ITEMS_PER_PAGE;
+        const currentWishes = allWishes.slice(start, end);
+
+        // Render Cards
+        container.innerHTML = currentWishes
+            .map(
+                (w: any) => `
+            <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-gold reveal active animate-fade-in">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center text-gold font-bold flex-shrink-0">
+                        ${w.name.charAt(0).toUpperCase()}
+                    </div>
+                    <div class="min-w-0 flex-1">
+                        <h4 class="font-bold text-gray-800 leading-none truncate">${w.name}</h4>
+                        <span class="text-[10px] text-gray-400">${w.time}</span>
+                    </div>
+                </div>
+                <p class="text-gray-600 italic leading-relaxed break-words">
+                    "${w.message}"
+                </p>
+            </div>
+        `,
+            )
+            .join("");
+
+        // Update Pagination Visibility & Buttons
+        if (allWishes.length > ITEMS_PER_PAGE) {
+            pagination?.classList.remove("hidden");
+            updatePaginationUI(totalPages);
+        } else {
+            pagination?.classList.add("hidden");
+        }
+    }
+
+    // 4. Update UI Pagination (Tombol & Angka)
+    function updatePaginationUI(totalPages: number) {
+        if (!pageNumbers || !prevBtn || !nextBtn) return;
+
+        // Render angka halaman
+        pageNumbers.innerHTML = "";
+
+        // Logika sederhana: Tampilkan semua angka halaman (cocok untuk jumlah kecil-menengah)
+        for (let i = 1; i <= totalPages; i++) {
+            const btn = document.createElement("button");
+            btn.innerText = i.toString();
+            btn.className = `w-10 h-10 rounded-full border border-gold/30 flex items-center justify-center transition-all ${i === currentPage ? "bg-gold text-white font-bold" : "text-gold hover:bg-gold/10"}`;
+            btn.onclick = () => {
+                currentPage = i;
+                renderWishes();
+                scrollToWishes();
+            };
+            pageNumbers.appendChild(btn);
+        }
+
+        // Set state tombol Navigatif
+        prevBtn.disabled = currentPage === 1;
+        nextBtn.disabled = currentPage === totalPages;
+    }
+
+    // 5. Scroll Smooth ke area Wishes
+    function scrollToWishes() {
+        if (!container) return;
+        const offset = 100;
+        const elementPosition = container.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - offset;
+
+        window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth",
+        });
+    }
+
+    // 6. Event Handler Form Submit
+    form?.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const nameInput = document.getElementById(
+            "wish-name",
+        ) as HTMLInputElement;
+        const msgInput = document.getElementById(
+            "wish-message",
+        ) as HTMLTextAreaElement;
+
+        const newWish = {
+            id: Date.now(),
+            name: nameInput.value,
+            message: msgInput.value,
+            time: new Date().toLocaleString("id-ID", {
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+            }),
+        };
+
+        const currentWishes = getWishes();
+        currentWishes.unshift(newWish); // Tambahkan ke paling atas
+        localStorage.setItem("wedding_wishes", JSON.stringify(currentWishes));
+
+        // Reset form, balik ke hal 1 & Refresh
+        form.reset();
+        currentPage = 1;
+        renderWishes();
+    });
+
+    // 7. Event Handler Tombol Prev/Next
+    prevBtn?.addEventListener("click", () => {
+        if (currentPage > 1) {
+            currentPage--;
+            renderWishes();
+            scrollToWishes();
+        }
+    });
+
+    nextBtn?.addEventListener("click", () => {
+        const all = getWishes();
+        const maxPage = Math.ceil(all.length / ITEMS_PER_PAGE);
+        if (currentPage < maxPage) {
+            currentPage++;
+            renderWishes();
+            scrollToWishes();
+        }
+    });
+
+    // Jalankan render awal saat halaman dimuat
+    document.addEventListener("DOMContentLoaded", renderWishes);
+    // Tambahan untuk Astro (jika navigasi client-side aktif)
+    renderWishes();
+</script>

@@ -1,26 +1,82 @@
 ---
-import '../styles/global.css';
+import "../styles/global.css";
 // Component Imports
-import Button from '../components/Button.astro';
+import Hero from "../components/Hero.astro";
+import Quote from "../components/Quote.astro";
+import Couple from "../components/Couple.astro";
+import Story from "../components/Story.astro";
+import Gallery from "../components/Gallery.astro";
+import Event from "../components/Event.astro";
+import Countdown from "../components/Countdown.astro";
+import RSVP from "../components/RSVP.astro";
+import Wish from "../components/Wish.astro";
+import WeddingGift from "../components/WeddingGift.astro";
+import Closing from "../components/Closing.astro";
+import FloatingNav from "../components/FloatingNav.astro"; // Import Baru
 
-// Full Astro Component Syntax:
-// https://docs.astro.build/basics/astro-components/
+// Togle Fitur Halaman Utama
+const ENABLE_FADE_SCROLL = true; // true = Aktifkan efek muncul saat scroll (fade reveal)
 ---
 
-<html lang="en">
+<html lang="id">
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro + TailwindCSS</title>
+		<title>The Wedding of Gelar & Eliza</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
+			rel="stylesheet"
+		/>
 	</head>
 
 	<body>
-		<div class="grid place-items-center h-screen content-center">
-			<Button>Tailwind Button in Astro!</Button>
-			<a href="/markdown-page" class="p-4 underline">Markdown is also supported...</a>
-		</div>
+		{
+			/* Hero section tidak menggunakan efek reveal scroll (sudah ada animasi pembuka) */
+		}
+		<Hero />
+
+		{/* Bungkus section lain dengan class .reveal jika fitur diaktifkan */}
+		<div class={ENABLE_FADE_SCROLL ? "reveal" : ""}><Quote /></div>
+		<div class={ENABLE_FADE_SCROLL ? "reveal" : ""}><Couple /></div>
+		<div class={ENABLE_FADE_SCROLL ? "reveal" : ""}><Story /></div>
+		<div class={ENABLE_FADE_SCROLL ? "reveal" : ""}><Gallery /></div>
+		<div class={ENABLE_FADE_SCROLL ? "reveal" : ""}><Event /></div>
+		<div class={ENABLE_FADE_SCROLL ? "reveal" : ""}><Countdown /></div>
+		<div class={ENABLE_FADE_SCROLL ? "reveal" : ""}><RSVP /></div>
+		<div class={ENABLE_FADE_SCROLL ? "reveal" : ""}><Wish /></div>
+		<div class={ENABLE_FADE_SCROLL ? "reveal" : ""}><WeddingGift /></div>
+		<div class={ENABLE_FADE_SCROLL ? "reveal" : ""}><Closing /></div>
+
+		{/* Navigasi Melayang (Tombol Musik & Back to Top) */}
+		<FloatingNav />
+
+		<script is:inline define:vars={{ ENABLE_FADE_SCROLL }}>
+			// --- LOGIKA MUNCUL SAAT SCROLL (SCROLL REVEAL) ---
+			if (ENABLE_FADE_SCROLL) {
+				const observerOptions = {
+					threshold: 0.15, // Section akan muncul jika 15% areanya terlihat di layar
+				};
+
+				const observer = new IntersectionObserver((entries) => {
+					entries.forEach((entry) => {
+						if (entry.isIntersecting) {
+							entry.target.classList.add("active");
+							// Berhenti mengamati setelah elemen muncul agar animasi cuma sekali saja (opsional)
+							// observer.unobserve(entry.target);
+						}
+					});
+				}, observerOptions);
+
+				// Cari semua elemen dengan class .reveal dan mulai mengamati
+				document.querySelectorAll(".reveal").forEach((el) => {
+					observer.observe(el);
+				});
+			}
+		</script>
 	</body>
 </html>

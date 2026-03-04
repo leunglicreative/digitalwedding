@@ -1,0 +1,145 @@
+---
+/**
+ * KONFIGURASI WEDDING GIFT
+ * - Bagian ini berisi informasi nomor rekening dan alamat pengiriman kado.
+ * - Anda dapat mengganti logo bank, nomor rekening, Alamat, dan link Google Maps di sini.
+ */
+
+// 1. DATA REKENING
+const BANK_BCA = {
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Bank_Central_Asia.svg/1200px-Bank_Central_Asia.svg.png",
+    number: "1234567890",
+    owner: "Gelar Lailatul Qodar",
+};
+
+const BANK_MANDIRI = {
+    logo: "https://upload.wikimedia.org/wikipedia/id/thumb/f/fa/Bank_Mandiri_logo.svg/1200px-Bank_Mandiri_logo.svg.png",
+    number: "0987654321",
+    owner: "Eliza",
+};
+
+// 2. DATA ALAMAT PENGIRIMAN
+const SHIPPING_ADDRESS = {
+    title: "Kirim Kado Fisik",
+    receiver: "Gelar & Eliza",
+    fullAddress:
+        "Jl. Pernikahan Indah No. 88, Kec. Kebahagiaan, Kota Cinta, 12345",
+    // Ganti Link Iframe Google Maps di bawah ini (Ambil dari Google Maps -> Share -> Embed a map)
+    mapIframe:
+        '<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.521260322283!2d106.8195613512345!3d-6.1944491!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f436b8335461%3A0x26105aa03961da!2sBundaran%20HI!5e0!3m2!1sid!2sid!4v1625456789012!5m2!1sid!2sid" width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy"></iframe>',
+};
+---
+
+<section id="gift" class="py-20 bg-blush px-4 text-center">
+    <div class="max-w-4xl mx-auto">
+        <h2 class="font-serif text-4xl text-gold mb-6 italic reveal">
+            Wedding Gift
+        </h2>
+        <p class="text-gray-600 mb-12 max-w-2xl mx-auto reveal">
+            Doa restu Anda merupakan karunia terindah bagi kami. Namun jika Anda
+            ingin memberikan tanda kasih, Anda dapat mengirimkannya melalui:
+        </p>
+
+        <div class="grid md:grid-cols-2 gap-8 mb-16">
+            <!-- Rekening 1 (BCA) -->
+            <div
+                class="bg-white p-8 rounded-2xl shadow-lg border border-gold/10 flex flex-col items-center reveal"
+            >
+                <div class="h-12 flex items-center mb-6">
+                    <img
+                        src={BANK_BCA.logo}
+                        alt="BCA Logo"
+                        class="h-full object-contain filter"
+                    />
+                </div>
+                <p class="text-2xl font-mono text-gold mb-2 tracking-widest">
+                    {BANK_BCA.number}
+                </p>
+                <p class="text-gray-500 mb-6 italic">a.n {BANK_BCA.owner}</p>
+                <button
+                    onclick={`navigator.clipboard.writeText('${BANK_BCA.number}')`}
+                    class="bg-gold/10 text-gold px-8 py-2 rounded-full text-sm font-semibold hover:bg-gold hover:text-white transition-all active:scale-95"
+                >
+                    Salin No. Rekening
+                </button>
+            </div>
+
+            <!-- Rekening 2 (Mandiri) -->
+            <div
+                class="bg-white p-8 rounded-2xl shadow-lg border border-gold/10 flex flex-col items-center reveal"
+            >
+                <div class="h-10 flex items-center mb-6">
+                    <img
+                        src={BANK_MANDIRI.logo}
+                        alt="Mandiri Logo"
+                        class="h-full object-contain"
+                    />
+                </div>
+                <p class="text-2xl font-mono text-gold mb-2 tracking-widest">
+                    {BANK_MANDIRI.number}
+                </p>
+                <p class="text-gray-500 mb-6 italic">
+                    a.n {BANK_MANDIRI.owner}
+                </p>
+                <button
+                    onclick={`navigator.clipboard.writeText('${BANK_MANDIRI.number}')`}
+                    class="bg-gold/10 text-gold px-8 py-2 rounded-full text-sm font-semibold hover:bg-gold hover:text-white transition-all active:scale-95"
+                >
+                    Salin No. Rekening
+                </button>
+            </div>
+        </div>
+
+        <!-- Alamat Pengiriman & Maps -->
+        <div
+            class="max-w-2xl mx-auto bg-white rounded-2xl shadow-xl border border-gold/10 overflow-hidden reveal"
+        >
+            <div class="p-8 pb-0 text-left">
+                <h3
+                    class="text-xl font-serif text-dark-text mb-4 flex items-center gap-3"
+                >
+                    <svg
+                        class="w-6 h-6 text-gold"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                        ></path>
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    {SHIPPING_ADDRESS.title}
+                </h3>
+                <div
+                    class="bg-gold/5 p-4 rounded-xl border border-gold/10 mb-6"
+                >
+                    <p class="font-bold text-gray-800 mb-1">
+                        {SHIPPING_ADDRESS.receiver}
+                    </p>
+                    <p class="text-gray-600 leading-relaxed text-sm">
+                        {SHIPPING_ADDRESS.fullAddress}
+                    </p>
+                </div>
+            </div>
+
+            <!-- Embed Map (Dinamis) -->
+            <div
+                class="w-full grayscale hover:grayscale-0 transition-all duration-500"
+            >
+                <Fragment set:html={SHIPPING_ADDRESS.mapIframe} />
+            </div>
+
+            <div class="p-4 bg-gray-50 text-gray-500 text-xs italic">
+                *Silakan konfirmasi via WhatsApp sebelum pengiriman.
+            </div>
+        </div>
+    </div>
+</section>

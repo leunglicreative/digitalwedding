@@ -1,1 +1,79 @@
 @import "tailwindcss";
+
+@theme {
+  --color-blush-pink: #F5E1E1;
+  --color-gold: #D4AF37;
+  --color-soft-white: #FCFAFA;
+}
+
+:root {
+  --blush-pink: #F5E1E1;
+  --gold: #D4AF37;
+  --soft-white: #FCFAFA;
+  --dark-text: #333333;
+}
+
+/* 
+   Gunakan palet warna ini untuk modifikasi:
+   Blush Pink: #F5E1E1 (Latar belakang lembut)
+   Gold: #D4AF37 (Aksen mewah)
+   White: #FFFFFF / #FCFAFA (Bersih)
+*/
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  color: var(--dark-text);
+  background-color: var(--soft-white);
+  margin: 0;
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+.font-serif {
+  font-family: 'Playfair Display', serif;
+}
+
+.bg-blush {
+  background-color: var(--blush-pink);
+}
+
+.text-gold {
+  color: var(--gold);
+}
+
+.border-gold {
+  border-color: var(--gold);
+}
+
+/* Animasi sederhana untuk elemen muncul */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeInUp 1s ease-out forwards;
+}
+
+/* --- Scroll Reveal Animation --- */
+/* Gunakan class .reveal pada elemen yang ingin dimunculkan saat scroll */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s ease-out;
+}
+
+/* Class .active akan ditambahkan lewat JavaScript saat elemen terlihat di layar */
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
