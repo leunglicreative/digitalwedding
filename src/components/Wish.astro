@@ -140,7 +140,9 @@
             }
         } else {
             const saved = localStorage.getItem("wedding_wishes");
-            return saved ? JSON.parse(saved) : [];
+            const wishes = saved ? JSON.parse(saved) : [];
+            // Pastikan diurutkan terbaru (berdasarkan id/timestamp jika tidak ada created_at)
+            return wishes.sort((a: any, b: any) => (b.id || 0) - (a.id || 0));
         }
     }
 
@@ -156,10 +158,10 @@
             return;
         }
 
-        // Hitung index data untuk halaman aktif
+        // Hitung total halaman
         const totalPages = Math.ceil(allWishes.length / ITEMS_PER_PAGE);
 
-        // Validasi halaman aktif agar tidak out of bounds
+        // Validasi halaman aktif
         if (currentPage > totalPages) currentPage = totalPages;
         if (currentPage < 1) currentPage = 1;
 
@@ -170,9 +172,15 @@
         // Render Cards
         container.innerHTML = currentWishes
             .map((w: any) => {
+                // Handle format data yang berbeda antara Supabase dan LocalStorage
+                const name = w.nama || w.name || "Anonim";
+                const message = w.pesan || w.message || "";
                 const wishDate = w.created_at
                     ? new Date(w.created_at)
-                    : new Date(w.time);
+                    : w.time
+                      ? new Date(w.time)
+                      : new Date(w.id);
+
                 const formattedTime = wishDate.toLocaleString("id-ID", {
                     day: "numeric",
                     month: "short",
@@ -185,27 +193,29 @@
             <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-gold reveal active animate-fade-in">
                 <div class="flex items-center gap-3 mb-3">
                     <div class="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center text-gold font-bold flex-shrink-0">
-                        ${(w.nama || w.name).charAt(0).toUpperCase()}
+                        ${name.charAt(0).toUpperCase()}
                     </div>
                     <div class="min-w-0 flex-1">
-                        <h4 class="font-bold text-gray-800 leading-none truncate">${w.nama || w.name}</h4>
+                        <h4 class="font-bold text-gray-800 leading-none truncate">${name}</h4>
                         <span class="text-[10px] text-gray-400">${formattedTime}</span>
                     </div>
                 </div>
                 <p class="text-gray-600 italic leading-relaxed break-words">
-                    "${w.pesan || w.message}"
+                    "${message}"
                 </p>
             </div>
         `;
             })
             .join("");
 
-        // Update Pagination Visibility & Buttons
+        // Tampilkan/Sembunyikan Navigasi Pagination
         if (allWishes.length > ITEMS_PER_PAGE) {
             pagination?.classList.remove("hidden");
+            pagination?.classList.add("flex");
             updatePaginationUI(totalPages);
         } else {
             pagination?.classList.add("hidden");
+            pagination?.classList.remove("flex");
         }
     }
 
@@ -216,7 +226,6 @@
         // Render angka halaman
         pageNumbers.innerHTML = "";
 
-        // Logika sederhana: Tampilkan semua angka halaman (cocok untuk jumlah kecil-menengah)
         for (let i = 1; i <= totalPages; i++) {
             const btn = document.createElement("button");
             btn.innerText = i.toString();
@@ -229,7 +238,7 @@
             pageNumbers.appendChild(btn);
         }
 
-        // Set state tombol Navigatif
+        // Set state tombol Navigasi
         prevBtn.disabled = currentPage === 1;
         nextBtn.disabled = currentPage === totalPages;
     }
@@ -271,6 +280,8 @@
                     .insert([{ nama: nameInput.value, pesan: msgInput.value }]);
 
                 if (error) throw error;
+                // Jangan panggil renderWishes secara manual jika Realtime aktif
+                // karena subscription akan menanganinya
             } else {
                 const newWish = {
                     id: Date.now(),
@@ -287,14 +298,14 @@
                     "wedding_wishes",
                     JSON.stringify(currentWishes),
                 );
+
+                // Refresh manual untuk localStorage
+                currentPage = 1;
+                await renderWishes();
             }
 
             // Reset form, balik ke hal 1 & Refresh
             form.reset();
-            currentPage = 1;
-            await renderWishes();
-
-            // Tampilkan Alert Sukses
             alert("Terima kasih atas ucapan dan doa restunya!");
         } catch (error) {
             console.error("Error submitting wish:", error);
@@ -328,8 +339,31 @@
         }
     });
 
-    // Jalankan render awal saat halaman dimuat
-    document.addEventListener("DOMContentLoaded", renderWishes);
-    // Tambahan untuk Astro (jika navigasi client-side aktif)
-    renderWishes();
+    // 8. Logika Realtime Supabase
+    function setupRealtime() {
+        if (!useSupabase) return;
+
+        // Berlangganan perubahan pada tabel 'wish'
+        supabase
+            .channel("wish-realtime")
+            .on(
+                "postgres_changes",
+                { event: "INSERT", schema: "public", table: "wish" },
+                (payload) => {
+                    console.log("Wish baru diterima secara realtime!", payload);
+                    // Jika user sedang di halaman pertama, langsung refresh
+                    // Jika tidak, biarkan saja (user bisa klik angka 1 nanti)
+                    if (currentPage === 1) {
+                        renderWishes();
+                    }
+                },
+            )
+            .subscribe();
+    }
+
+    // Jalankan awal
+    document.addEventListener("DOMContentLoaded", () => {
+        renderWishes();
+        setupRealtime();
+    });
 </script>
