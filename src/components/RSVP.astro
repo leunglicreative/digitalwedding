@@ -142,6 +142,13 @@
 <script>
     // --- LOGIKA RSVP AJAX (TANPA RELOAD) ---
 
+    // SETINGAN SUPABASE
+    // Ubah ke true untuk mengaktifkan database Supabase
+    // Ubah ke false untuk hanya menggunakan localStorage (mode demo)
+    const useSupabase = true;
+
+    import { supabase } from "../lib/supabase.js";
+
     document.addEventListener("DOMContentLoaded", () => {
         const form = document.getElementById("rsvp-form") as HTMLFormElement;
         const container = document.getElementById("rsvp-success");
@@ -149,28 +156,22 @@
 
         if (!form || !container) return;
 
-        form.addEventListener("submit", (e) => {
+        form.addEventListener("submit", async (e) => {
             e.preventDefault();
 
             // 1. Ambil Data
             const formData = new FormData(form);
+            const attendanceValue = formData.get("attendance");
+            const isPresent = attendanceValue === "hadir";
+            const guestsCount = parseInt(formData.get("guests") as string);
+
             const data = {
-                id: Date.now(),
-                name: formData.get("name"),
-                guests: formData.get("guests"),
-                attendance: formData.get("attendance"),
-                time: new Date().toISOString(),
+                nama: formData.get("name"),
+                jumlah_orang: guestsCount,
+                kehadiran: isPresent,
             };
 
-            // 2. Simpan ke LocalStorage (Mock Database)
-            // Nantinya bagian ini bisa diganti dengan fetch() ke API/Database
-            const existingRsvp = JSON.parse(
-                localStorage.getItem("wedding_rsvp") || "[]",
-            );
-            existingRsvp.push(data);
-            localStorage.setItem("wedding_rsvp", JSON.stringify(existingRsvp));
-
-            // 3. Efek Loading (Opsional)
+            // 2. Efek Loading
             const submitBtn = document.getElementById("rsvp-submit");
             if (submitBtn) {
                 submitBtn.innerHTML =
@@ -178,19 +179,54 @@
                 submitBtn.setAttribute("disabled", "true");
             }
 
-            // 4. Tampilkan Pesan Sukses (Delay sedikit agar terasa natural)
-            setTimeout(() => {
-                form.classList.add(
-                    "opacity-0",
-                    "pointer-events-none",
-                    "absolute",
-                );
+            try {
+                if (useSupabase) {
+                    // Simpan ke Supabase
+                    const { error } = await supabase
+                        .from("rsvp")
+                        .insert([data]);
+
+                    if (error) throw error;
+                } else {
+                    // Simpan ke LocalStorage (Mock Database) sebagai fallback
+                    const existingRsvp = JSON.parse(
+                        localStorage.getItem("wedding_rsvp") || "[]",
+                    );
+                    existingRsvp.push({
+                        ...data,
+                        id: Date.now(),
+                        time: new Date().toISOString(),
+                    });
+                    localStorage.setItem(
+                        "wedding_rsvp",
+                        JSON.stringify(existingRsvp),
+                    );
+                }
+
+                // 3. Tampilkan Pesan Sukses
                 setTimeout(() => {
-                    form.classList.add("hidden");
-                    container.classList.remove("hidden");
-                    container.classList.add("block");
-                }, 300);
-            }, 800);
+                    form.classList.add(
+                        "opacity-0",
+                        "pointer-events-none",
+                        "absolute",
+                    );
+                    setTimeout(() => {
+                        form.classList.add("hidden");
+                        container.classList.remove("hidden");
+                        container.classList.add("block");
+                    }, 300);
+                }, 500);
+            } catch (error) {
+                console.error("Error submitting RSVP:", error);
+                alert(
+                    "Maaf, terjadi kesalahan saat mengirim konfirmasi. Silakan coba lagi.",
+                );
+
+                if (submitBtn) {
+                    submitBtn.innerHTML = "Kirim Konfirmasi";
+                    submitBtn.removeAttribute("disabled");
+                }
+            }
         });
 
         // Tombol untuk mereset/mengirim lagi

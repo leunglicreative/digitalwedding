@@ -105,6 +105,13 @@
 <script>
     // --- LOGIKA WISHES & PAGINATION ---
 
+    // SETINGAN SUPABASE
+    // Ubah ke true untuk mengaktifkan database Supabase
+    // Ubah ke false untuk hanya menggunakan localStorage (mode demo)
+    const useSupabase = true;
+
+    import { supabase } from "../lib/supabase.js";
+
     // 1. Inisialisasi Data
     const ITEMS_PER_PAGE = 5; // Tampilkan 5 pesan per halaman
     let currentPage = 1;
@@ -116,15 +123,30 @@
     const prevBtn = document.getElementById("prev-page") as HTMLButtonElement;
     const nextBtn = document.getElementById("next-page") as HTMLButtonElement;
 
-    // 2. Fungsi Ambil Data dari LocalStorage
-    function getWishes() {
-        const saved = localStorage.getItem("wedding_wishes");
-        return saved ? JSON.parse(saved) : [];
+    // 2. Fungsi Ambil Data (Supabase atau LocalStorage)
+    async function getWishes() {
+        if (useSupabase) {
+            try {
+                const { data, error } = await supabase
+                    .from("wish")
+                    .select("*")
+                    .order("created_at", { ascending: false });
+
+                if (error) throw error;
+                return data || [];
+            } catch (error) {
+                console.error("Error fetching wishes from Supabase:", error);
+                return [];
+            }
+        } else {
+            const saved = localStorage.getItem("wedding_wishes");
+            return saved ? JSON.parse(saved) : [];
+        }
     }
 
     // 3. Fungsi Render Wishes
-    function renderWishes() {
-        const allWishes = getWishes();
+    async function renderWishes() {
+        const allWishes = await getWishes();
         if (!container) return;
 
         if (allWishes.length === 0) {
@@ -147,24 +169,35 @@
 
         // Render Cards
         container.innerHTML = currentWishes
-            .map(
-                (w: any) => `
+            .map((w: any) => {
+                const wishDate = w.created_at
+                    ? new Date(w.created_at)
+                    : new Date(w.time);
+                const formattedTime = wishDate.toLocaleString("id-ID", {
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                });
+
+                return `
             <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-gold reveal active animate-fade-in">
                 <div class="flex items-center gap-3 mb-3">
                     <div class="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center text-gold font-bold flex-shrink-0">
-                        ${w.name.charAt(0).toUpperCase()}
+                        ${(w.nama || w.name).charAt(0).toUpperCase()}
                     </div>
                     <div class="min-w-0 flex-1">
-                        <h4 class="font-bold text-gray-800 leading-none truncate">${w.name}</h4>
-                        <span class="text-[10px] text-gray-400">${w.time}</span>
+                        <h4 class="font-bold text-gray-800 leading-none truncate">${w.nama || w.name}</h4>
+                        <span class="text-[10px] text-gray-400">${formattedTime}</span>
                     </div>
                 </div>
                 <p class="text-gray-600 italic leading-relaxed break-words">
-                    "${w.message}"
+                    "${w.pesan || w.message}"
                 </p>
             </div>
-        `,
-            )
+        `;
+            })
             .join("");
 
         // Update Pagination Visibility & Buttons
@@ -215,7 +248,7 @@
     }
 
     // 6. Event Handler Form Submit
-    form?.addEventListener("submit", (e) => {
+    form?.addEventListener("submit", async (e) => {
         e.preventDefault();
         const nameInput = document.getElementById(
             "wish-name",
@@ -224,27 +257,56 @@
             "wish-message",
         ) as HTMLTextAreaElement;
 
-        const newWish = {
-            id: Date.now(),
-            name: nameInput.value,
-            message: msgInput.value,
-            time: new Date().toLocaleString("id-ID", {
-                day: "numeric",
-                month: "short",
-                year: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-            }),
-        };
+        const submitBtn = form.querySelector('button[type="submit"]');
+        if (submitBtn) {
+            submitBtn.innerHTML =
+                '<span class="animate-pulse">Mengirim...</span>';
+            submitBtn.setAttribute("disabled", "true");
+        }
 
-        const currentWishes = getWishes();
-        currentWishes.unshift(newWish); // Tambahkan ke paling atas
-        localStorage.setItem("wedding_wishes", JSON.stringify(currentWishes));
+        try {
+            if (useSupabase) {
+                const { error } = await supabase
+                    .from("wish")
+                    .insert([{ nama: nameInput.value, pesan: msgInput.value }]);
 
-        // Reset form, balik ke hal 1 & Refresh
-        form.reset();
-        currentPage = 1;
-        renderWishes();
+                if (error) throw error;
+            } else {
+                const newWish = {
+                    id: Date.now(),
+                    name: nameInput.value,
+                    message: msgInput.value,
+                    time: new Date().toISOString(),
+                };
+
+                const currentWishes = JSON.parse(
+                    localStorage.getItem("wedding_wishes") || "[]",
+                );
+                currentWishes.unshift(newWish); // Tambahkan ke paling atas
+                localStorage.setItem(
+                    "wedding_wishes",
+                    JSON.stringify(currentWishes),
+                );
+            }
+
+            // Reset form, balik ke hal 1 & Refresh
+            form.reset();
+            currentPage = 1;
+            await renderWishes();
+
+            // Tampilkan Alert Sukses
+            alert("Terima kasih atas ucapan dan doa restunya!");
+        } catch (error) {
+            console.error("Error submitting wish:", error);
+            alert(
+                "Maaf, terjadi kesalahan saat mengirim ucapan. Silakan coba lagi.",
+            );
+        } finally {
+            if (submitBtn) {
+                submitBtn.innerHTML = "Kirim Ucapan";
+                submitBtn.removeAttribute("disabled");
+            }
+        }
     });
 
     // 7. Event Handler Tombol Prev/Next
@@ -256,8 +318,8 @@
         }
     });
 
-    nextBtn?.addEventListener("click", () => {
-        const all = getWishes();
+    nextBtn?.addEventListener("click", async () => {
+        const all = await getWishes();
         const maxPage = Math.ceil(all.length / ITEMS_PER_PAGE);
         if (currentPage < maxPage) {
             currentPage++;
