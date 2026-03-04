@@ -42,6 +42,27 @@
                     Kirim Ucapan
                 </button>
             </form>
+
+            <!-- Pesan Sukses - Ditampilkan setelah berhasil mengirim -->
+            <div
+                id="wish-success-msg"
+                class="hidden mt-4 p-4 bg-green-50 text-green-700 rounded-lg border border-green-200 animate-fade-in text-center font-medium"
+            >
+                <div class="flex items-center justify-center gap-2">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-5 w-5"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                    >
+                        <path
+                            fill-rule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                            clip-rule="evenodd"></path>
+                    </svg>
+                    Terima kasih atas ucapan dan doa restunya!
+                </div>
+            </div>
         </div>
 
         <!-- Area Tampilan Daftar Ucapan (Dinamis) -->
@@ -122,8 +143,10 @@
     const pageNumbers = document.getElementById("page-numbers");
     const prevBtn = document.getElementById("prev-page") as HTMLButtonElement;
     const nextBtn = document.getElementById("next-page") as HTMLButtonElement;
+    const successMsg = document.getElementById("wish-success-msg");
 
     // 2. Fungsi Ambil Data (Supabase atau LocalStorage)
+    // Fungsi ini akan mengambil data doa/ucapan dari database atau storage lokal
     async function getWishes() {
         if (useSupabase) {
             try {
@@ -139,6 +162,7 @@
                 return [];
             }
         } else {
+            // Mode fallback menggunakan localStorage jika tidak memakai database
             const saved = localStorage.getItem("wedding_wishes");
             const wishes = saved ? JSON.parse(saved) : [];
             // Pastikan diurutkan terbaru (berdasarkan id/timestamp jika tidak ada created_at)
@@ -175,6 +199,7 @@
                 // Handle format data yang berbeda antara Supabase dan LocalStorage
                 const name = w.nama || w.name || "Anonim";
                 const message = w.pesan || w.message || "";
+                // Gunakan created_at dari database untuk sinkronisasi waktu nyata
                 const wishDate = w.created_at
                     ? new Date(w.created_at)
                     : w.time
@@ -257,6 +282,7 @@
     }
 
     // 6. Event Handler Form Submit
+    // Logika saat user menekan tombol "Kirim Ucapan"
     form?.addEventListener("submit", async (e) => {
         e.preventDefault();
         const nameInput = document.getElementById(
@@ -304,11 +330,26 @@
                 await renderWishes();
             }
 
-            // Reset form, balik ke hal 1 & Refresh
+            // Reset form dan tampilkan pesan sukses
             form.reset();
-            alert("Terima kasih atas ucapan dan doa restunya!");
+
+            // Tampilkan pesan sukses di UI (Tanpa window.alert)
+            if (successMsg) {
+                successMsg.classList.remove("hidden");
+                // Sembunyikan kembali setelah 5 detik
+                setTimeout(() => {
+                    successMsg.classList.add("hidden");
+                }, 5000);
+            }
+
+            // Jika tidak pakai Supabase (LocalStorage), refresh manual
+            if (!useSupabase) {
+                currentPage = 1;
+                await renderWishes();
+            }
         } catch (error) {
             console.error("Error submitting wish:", error);
+            // Tetap menggunakan alert untuk error agar user tahu ada masalah teknis
             alert(
                 "Maaf, terjadi kesalahan saat mengirim ucapan. Silakan coba lagi.",
             );
@@ -340,6 +381,7 @@
     });
 
     // 8. Logika Realtime Supabase
+    // Menggunakan fitur Realtime Supabase agar daftar ucapan langsung update otomatis
     function setupRealtime() {
         if (!useSupabase) return;
 

@@ -111,7 +111,9 @@
         >
             Umar & <br class="md:hidden" /> Eliza
         </h1>
-        <p class="text-white/80 font-accent text-sm md:text-lg max-w-2xl px-4">
+        <p
+            class="text-white/80 font-accent text-sm md:text-lg max-w-2xl px-4 text-balance"
+        >
             Kami mengundang Anda untuk merayakan hari kebahagiaan kami
         </p>
     </div>
@@ -211,6 +213,7 @@
     // LOGIKA SISTEM (JANGAN DIUBAH KECUALI PERLU)
     // ==========================================
 
+    // --- INISIALISASI ELEMEN ---
     const modal = document.getElementById("invitation-modal");
     const modalContent = document.getElementById(
         "modal-content",
@@ -228,8 +231,20 @@
 
     // --- LOGIKA SCROLL LOCK INITIAL ---
     // Jika IS_SCROLL_LOCKED aktif, kunci scroll body saat modal muncul.
-    if (IS_SCROLL_LOCKED) {
+    // Cek apakah undangan sudah pernah dibuka dalam sesi ini menggunakan sessionStorage.
+    const isOpened = sessionStorage.getItem("invitation_opened") === "true";
+
+    if (IS_SCROLL_LOCKED && !isOpened) {
+        // Kunci scroll hanya jika belum dibuka
         document.body.style.overflow = "hidden";
+    }
+
+    if (isOpened) {
+        // Jika sudah dibuka sebelumnya, langsung sembunyikan modal tanpa animasi
+        if (modal) modal.style.display = "none";
+        if (heroContent) heroContent.classList.remove("opacity-0");
+        // Pastikan scroll tidak terkunci
+        document.body.style.overflow = "";
     }
 
     // --- APPLY STYLES TO CONTAINER ---
@@ -337,7 +352,10 @@
     }
 
     openBtn?.addEventListener("click", () => {
-        // 1. KONTROL MUSIK
+        // 1. KONTROL MUSIK & SET SESSION
+        // Tandai bahwa undangan telah dibuka agar tidak muncul lagi saat refresh
+        sessionStorage.setItem("invitation_opened", "true");
+
         if (IS_MUSIC_ENABLED && music) {
             // Optimasi audio: pastikan source tidak di-download sebagai file mentah
             // Browser akan memperlakukan ini sebagai stream media
@@ -417,7 +435,8 @@
                     modal?.classList.add("opacity-0");
             }
 
-            // 4. MUNCULKAN KONTEN UTAMA (HERO)
+            // 5. MUNCULKAN KONTEN UTAMA (HERO)
+            // Memberikan jeda sedikit agar animasi penarik tirai/buka pintu selesai
             setTimeout(() => {
                 modal?.classList.add("hidden");
                 heroContent?.classList.remove("opacity-0");
