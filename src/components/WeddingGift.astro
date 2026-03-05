@@ -30,8 +30,9 @@ const SHIPPING_ADDRESS = {
 };
 ---
 
-<section id="gift" class="py-20 bg-blush px-4 text-center">
+<section id="gift" class="py-20 bg-blush px-4 text-center overflow-hidden">
     <div class="max-w-4xl mx-auto">
+        <!-- Judul Bagian -->
         <h2 class="font-serif text-4xl text-gold mb-6 italic reveal">
             Wedding Gift
         </h2>
@@ -43,103 +44,215 @@ const SHIPPING_ADDRESS = {
         <div class="grid md:grid-cols-2 gap-8 mb-16">
             <!-- Rekening 1 (BCA) -->
             <div
-                class="bg-white p-8 rounded-2xl shadow-lg border border-gold/10 flex flex-col items-center reveal"
+                class="bg-white p-8 rounded-2xl shadow-xl border border-gold/10 flex flex-col items-center reveal hover:shadow-2xl transition-all duration-500 group"
             >
-                <div class="h-12 flex items-center mb-6">
+                <div
+                    class="h-12 flex items-center mb-6 group-hover:scale-110 transition-transform duration-500"
+                >
                     <img
                         src={BANK_BCA.logo}
                         alt="BCA Logo"
-                        class="h-full object-contain filter"
+                        class="h-full object-contain"
                     />
                 </div>
-                <p class="text-2xl font-mono text-gold mb-2 tracking-widest">
+                <p
+                    class="text-2xl font-mono text-gold mb-2 tracking-widest font-bold"
+                >
                     {BANK_BCA.number}
                 </p>
                 <p class="text-gray-500 mb-6 italic">a.n {BANK_BCA.owner}</p>
-                <button
-                    onclick={`navigator.clipboard.writeText('${BANK_BCA.number}')`}
-                    class="bg-gold/10 text-gold px-8 py-2 rounded-full text-sm font-semibold hover:bg-gold hover:text-white transition-all active:scale-95"
-                >
-                    Salin No. Rekening
-                </button>
+
+                <div class="relative flex flex-col items-center w-full">
+                    <!-- Tombol Salin dengan Rekening BCA -->
+                    <button
+                        data-copy={BANK_BCA.number}
+                        class="copy-btn w-full max-w-[200px] relative overflow-hidden bg-gradient-to-r from-gold via-[#F5D17E] to-gold bg-[length:200%_auto] text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-[100%_center] transition-all duration-500 active:scale-95 shadow-md hover:shadow-gold/20"
+                    >
+                        <span>Salin No. Rekening</span>
+                    </button>
+                    <!-- Notifikasi Berhasil (Muncul di bawah tombol) -->
+                    <p
+                        class="copy-success opacity-0 transform translate-y-2 text-xs text-green-600 font-medium mt-2 transition-all duration-300"
+                    >
+                        ✓ Berhasil Disalin!
+                    </p>
+                </div>
             </div>
 
             <!-- Rekening 2 (Mandiri) -->
             <div
-                class="bg-white p-8 rounded-2xl shadow-lg border border-gold/10 flex flex-col items-center reveal"
+                class="bg-white p-8 rounded-2xl shadow-xl border border-gold/10 flex flex-col items-center reveal hover:shadow-2xl transition-all duration-500 group"
             >
-                <div class="h-10 flex items-center mb-6">
+                <div
+                    class="h-10 flex items-center mb-6 group-hover:scale-110 transition-transform duration-500"
+                >
                     <img
                         src={BANK_MANDIRI.logo}
                         alt="Mandiri Logo"
                         class="h-full object-contain"
                     />
                 </div>
-                <p class="text-2xl font-mono text-gold mb-2 tracking-widest">
+                <p
+                    class="text-2xl font-mono text-gold mb-2 tracking-widest font-bold"
+                >
                     {BANK_MANDIRI.number}
                 </p>
                 <p class="text-gray-500 mb-6 italic">
                     a.n {BANK_MANDIRI.owner}
                 </p>
-                <button
-                    onclick={`navigator.clipboard.writeText('${BANK_MANDIRI.number}')`}
-                    class="bg-gold/10 text-gold px-8 py-2 rounded-full text-sm font-semibold hover:bg-gold hover:text-white transition-all active:scale-95"
-                >
-                    Salin No. Rekening
-                </button>
+
+                <div class="relative flex flex-col items-center w-full">
+                    <!-- Tombol Salin dengan Rekening Mandiri -->
+                    <button
+                        data-copy={BANK_MANDIRI.number}
+                        class="copy-btn w-full max-w-[200px] relative overflow-hidden bg-gradient-to-r from-gold via-[#F5D17E] to-gold bg-[length:200%_auto] text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-[100%_center] transition-all duration-500 active:scale-95 shadow-md hover:shadow-gold/20"
+                    >
+                        <span>Salin No. Rekening</span>
+                    </button>
+                    <!-- Notifikasi Berhasil (Muncul di bawah tombol) -->
+                    <p
+                        class="copy-success opacity-0 transform translate-y-2 text-xs text-green-600 font-medium mt-2 transition-all duration-300"
+                    >
+                        ✓ Berhasil Disalin!
+                    </p>
+                </div>
             </div>
         </div>
 
         <!-- Alamat Pengiriman & Maps -->
+        <!-- Optimalisasi layout: Memberikan padding dan border radius pada container Maps -->
         <div
-            class="max-w-2xl mx-auto bg-white rounded-2xl shadow-xl border border-gold/10 overflow-hidden reveal"
+            class="max-w-2xl mx-auto bg-white rounded-3xl shadow-2xl border border-gold/10 overflow-hidden reveal"
         >
-            <div class="p-8 pb-0 text-left">
+            <div class="p-8 pb-4 text-left">
                 <h3
-                    class="text-xl font-serif text-dark-text mb-4 flex items-center gap-3"
+                    class="text-2xl font-serif text-dark-text mb-4 flex items-center gap-3"
                 >
-                    <svg
-                        class="w-6 h-6 text-gold"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                        ></path>
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                    </svg>
+                    <div class="p-2 bg-gold/10 rounded-lg">
+                        <svg
+                            class="w-6 h-6 text-gold"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                            ></path>
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                    </div>
                     {SHIPPING_ADDRESS.title}
                 </h3>
                 <div
-                    class="bg-gold/5 p-4 rounded-xl border border-gold/10 mb-6"
+                    class="bg-gold/5 p-6 rounded-2xl border border-gold/10 mb-6"
                 >
-                    <p class="font-bold text-gray-800 mb-1">
+                    <p class="font-bold text-gray-800 mb-2 text-lg">
                         {SHIPPING_ADDRESS.receiver}
                     </p>
-                    <p class="text-gray-600 leading-relaxed text-sm">
+                    <p class="text-gray-600 leading-relaxed">
                         {SHIPPING_ADDRESS.fullAddress}
                     </p>
                 </div>
             </div>
 
-            <!-- Embed Map (Dinamis) -->
-            <div
-                class="w-full grayscale hover:grayscale-0 transition-all duration-500"
-            >
-                <Fragment set:html={SHIPPING_ADDRESS.mapIframe} />
+            <!-- Embed Map (Dinamis) dengan Spaging -->
+            <!-- Memberikan margin/padding agar tidak menempel ke tepi (Permintaan User) -->
+            <div class="px-6 pb-6">
+                <div
+                    class="w-full grayscale hover:grayscale-0 transition-all duration-700 rounded-2xl overflow-hidden shadow-inner border border-gray-100"
+                >
+                    <Fragment set:html={SHIPPING_ADDRESS.mapIframe} />
+                </div>
             </div>
 
-            <div class="p-4 bg-gray-50 text-gray-500 text-xs italic">
+            <div
+                class="p-4 bg-gray-50 text-gray-400 text-xs italic border-t border-gray-100"
+            >
                 *Silakan konfirmasi via WhatsApp sebelum pengiriman.
             </div>
         </div>
     </div>
 </section>
+
+<style>
+    /* Animasi Klik Pulse untuk Tombol */
+    @keyframes btn-pulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4);
+        }
+        70% {
+            box-shadow: 0 0 0 10px rgba(212, 175, 55, 0);
+        }
+        100% {
+            box-shadow: 0 0 0 0 rgba(212, 175, 55, 0);
+        }
+    }
+
+    .btn-animated {
+        animation: btn-pulse 0.6s ease-out;
+    }
+
+    /* Efek Berkilau pada Tombol saat Hover */
+    .copy-btn::after {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(
+            45deg,
+            transparent,
+            rgba(255, 255, 255, 0.3),
+            transparent
+        );
+        transform: rotate(45deg);
+        transition: 0.5s;
+        opacity: 0;
+    }
+
+    .copy-btn:hover::after {
+        opacity: 1;
+        left: 100%;
+    }
+</style>
+
+<script>
+    // Inisialisasi fungsi salin nomor rekening
+    const copyButtons = document.querySelectorAll(".copy-btn");
+
+    copyButtons.forEach((btn) => {
+        btn.addEventListener("click", async () => {
+            const textToCopy = btn.getAttribute("data-copy");
+            const successMsg = btn.parentElement.querySelector(".copy-success");
+
+            try {
+                // Gunakan Clipboard API
+                await navigator.clipboard.writeText(textToCopy);
+
+                // Tambahkan animasi klik
+                btn.classList.add("btn-animated");
+                setTimeout(() => btn.classList.remove("btn-animated"), 600);
+
+                // Tampilkan pesan berhasil
+                successMsg.classList.remove("opacity-0", "translate-y-2");
+                successMsg.classList.add("opacity-100", "translate-y-0");
+
+                // Sembunyikan pesan setelah 2 detik
+                setTimeout(() => {
+                    successMsg.classList.add("opacity-0", "translate-y-2");
+                    successMsg.classList.remove("opacity-100", "translate-y-0");
+                }, 2000);
+            } catch (err) {
+                console.error("Gagal menyalin teks: ", err);
+            }
+        });
+    });
+</script>
