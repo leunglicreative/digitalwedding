@@ -12,10 +12,11 @@ import RSVP from "../components/RSVP.astro";
 import Wish from "../components/Wish.astro";
 import WeddingGift from "../components/WeddingGift.astro";
 import Closing from "../components/Closing.astro";
-import FloatingNav from "../components/FloatingNav.astro"; // Import Baru
+import FloatingNav from "../components/FloatingNav.astro"; // Navigasi melayang (Musik & Tombol Atas)
 
-// Togle Fitur Halaman Utama
-const ENABLE_FADE_SCROLL = true; // true = Aktifkan efek muncul saat scroll (fade reveal)
+// --- KONFIGURASI HALAMAN UTAMA ---
+// Tentukan apakah ingin menggunakan efek muncul (fade) saat scroll.
+const ENABLE_FADE_SCROLL = true; // true = Aktif, false = Nonaktif
 ---
 
 <html lang="id">
@@ -25,7 +26,10 @@ const ENABLE_FADE_SCROLL = true; // true = Aktifkan efek muncul saat scroll (fad
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
-		<title>The Wedding of Gelar & Eliza</title>
+		{
+			/* CARA MENGGANTI JUDUL BROWSER: Ganti teks di dalam tag <title> di bawah ini */
+		}
+		<title>The Wedding of Umar & Eliza</title>
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link
@@ -46,7 +50,10 @@ const ENABLE_FADE_SCROLL = true; // true = Aktifkan efek muncul saat scroll (fad
 		<div class={ENABLE_FADE_SCROLL ? "reveal" : ""}><Story /></div>
 		<div class={ENABLE_FADE_SCROLL ? "reveal" : ""}><Gallery /></div>
 		<div class={ENABLE_FADE_SCROLL ? "reveal" : ""}><Event /></div>
-		<div class={ENABLE_FADE_SCROLL ? "reveal" : ""}><Countdown /></div>
+		{
+			/* REVEAL sekarang ditangani langsung di dalam component Countdown untuk transisi background yang lebih mulus */
+		}
+		<Countdown />
 		<div class={ENABLE_FADE_SCROLL ? "reveal" : ""}><RSVP /></div>
 		<div class={ENABLE_FADE_SCROLL ? "reveal" : ""}><Wish /></div>
 		<div class={ENABLE_FADE_SCROLL ? "reveal" : ""}><WeddingGift /></div>

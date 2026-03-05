@@ -6,16 +6,17 @@
 */
 ---
 
-<section id="countdown" class="pt-12 pb-1 bg-blush px-4">
+<section id="countdown" class="pt-12 pb-1 bg-blush px-4 reveal">
     <div class="max-w-4xl mx-auto text-center">
         <h2 class="font-serif text-4xl text-gold mb-8 italic">
             Counting Down to the Big Day
         </h2>
 
-        <div id="timer" class="flex justify-center gap-2 md:gap-8 reveal">
+        <div id="timer" class="flex justify-center gap-2 md:gap-8">
             <div class="flex flex-col items-center">
                 <div
                     class="w-[70px] h-[70px] md:w-24 md:h-24 bg-white rounded-xl shadow-lg flex items-center justify-center mb-2 border border-gold/10"
+                    style="backface-visibility: hidden; transform: translateZ(0);"
                 >
                     <span
                         id="days"
@@ -32,6 +33,7 @@
             <div class="flex flex-col items-center">
                 <div
                     class="w-[70px] h-[70px] md:w-24 md:h-24 bg-white rounded-xl shadow-lg flex items-center justify-center mb-2 border border-gold/10"
+                    style="backface-visibility: hidden; transform: translateZ(0);"
                 >
                     <span
                         id="hours"
@@ -48,6 +50,7 @@
             <div class="flex flex-col items-center">
                 <div
                     class="w-[70px] h-[70px] md:w-24 md:h-24 bg-white rounded-xl shadow-lg flex items-center justify-center mb-2 border border-gold/10"
+                    style="backface-visibility: hidden; transform: translateZ(0);"
                 >
                     <span
                         id="minutes"
@@ -64,6 +67,7 @@
             <div class="flex flex-col items-center">
                 <div
                     class="w-[70px] h-[70px] md:w-24 md:h-24 bg-white rounded-xl shadow-lg flex items-center justify-center mb-2 border border-gold/10"
+                    style="backface-visibility: hidden; transform: translateZ(0);"
                 >
                     <span
                         id="seconds"
@@ -81,18 +85,25 @@
 </section>
 
 <script>
+    // --- KONFIGURASI TANGGAL ---
     // Tentukan tanggal target di sini (Format: YYYY-MM-DDTHH:MM:SS)
+    // Contoh: "2026-12-12T08:00:00" berarti 12 Desember 2026 jam 08:00 pagi.
     const targetDate = new Date("2026-12-12T08:00:00").getTime();
 
+    // --- LOGIKA HITUNG MUNDUR ---
     function updateCountdown() {
+        // Ambil waktu sekarang
         const now = new Date().getTime();
+        // Hitung selisih waktu
         const distance = targetDate - now;
 
+        // Jika waktu sudah lewat, hentikan timer
         if (distance < 0) {
             clearInterval(timerInterval);
             return;
         }
 
+        // Kalkulasi Hari, Jam, Menit, dan Detik
         const days = Math.floor(distance / (1000 * 60 * 60 * 24));
         const hours = Math.floor(
             (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
@@ -100,20 +111,22 @@
         const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-        document.getElementById("days").innerText = days
-            .toString()
-            .padStart(2, "0");
-        document.getElementById("hours").innerText = hours
-            .toString()
-            .padStart(2, "0");
-        document.getElementById("minutes").innerText = minutes
-            .toString()
-            .padStart(2, "0");
-        document.getElementById("seconds").innerText = seconds
-            .toString()
-            .padStart(2, "0");
+        // Update tampilan ke HTML (dengan padStart agar selalu 2 digit, misal: 01, 09)
+        const daysEl = document.getElementById("days");
+        const hoursEl = document.getElementById("hours");
+        const minutesEl = document.getElementById("minutes");
+        const secondsEl = document.getElementById("seconds");
+
+        if (daysEl) daysEl.innerText = days.toString().padStart(2, "0");
+        if (hoursEl) hoursEl.innerText = hours.toString().padStart(2, "0");
+        if (minutesEl)
+            minutesEl.innerText = minutes.toString().padStart(2, "0");
+        if (secondsEl)
+            secondsEl.innerText = seconds.toString().padStart(2, "0");
     }
 
+    // Jalankan timer setiap 1 detik
     const timerInterval = setInterval(updateCountdown, 1000);
+    // Jalankan sekali saat pertama kali load agar tidak menunggu 1 detik
     updateCountdown();
 </script>
