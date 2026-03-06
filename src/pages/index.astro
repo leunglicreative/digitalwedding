@@ -76,7 +76,7 @@ const SECTION_VISIBILITY = {
 		/>
 	</head>
 
-	<body>
+	<body class="overflow-x-hidden">
 		{
 			/* Hero section tidak menggunakan efek reveal scroll (sudah ada animasi pembuka) */
 		}
@@ -224,7 +224,28 @@ const SECTION_VISIBILITY = {
 		<FloatingNav />
 
 		<script is:inline define:vars={{ ENABLE_ANIMATION_GLOBAL }}>
-			// --- LOGIKA MUNCUL SAAT SCROLL (SCROLL REVEAL) ---
+			// --- LOGIKA PENGUNCIAN SCROLL (HARD LOCK) ---
+			function lockScroll() {
+				document.documentElement.style.overflow = "hidden";
+				document.body.style.overflow = "hidden";
+				document.body.style.height = "100%";
+			}
+
+			function unlockScroll() {
+				document.documentElement.style.overflow = "";
+				document.body.style.overflow = "";
+				document.body.style.height = "";
+			}
+
+			// Kunci saat pertama kali load
+			lockScroll();
+
+			// Dengarkan event dari Hero.astro saat undangan dibuka
+			document.addEventListener("open-invitation", () => {
+				unlockScroll();
+			});
+
+			// --- LOGIKA MUNCUL SAAT SCROLL (SCROLL REVEAL OPTIMIZED) ---
 			if (ENABLE_ANIMATION_GLOBAL) {
 				const observerOptions = {
 					threshold: 0.15, // Section akan muncul jika 15% areanya terlihat di layar
@@ -234,8 +255,8 @@ const SECTION_VISIBILITY = {
 					entries.forEach((entry) => {
 						if (entry.isIntersecting) {
 							entry.target.classList.add("active");
-							// Berhenti mengamati setelah elemen muncul agar animasi cuma sekali saja (opsional)
-							// observer.unobserve(entry.target);
+							// OPTIMASI: Berhenti mengamati setelah elemen muncul agar tidak membebani performa mobile
+							observer.unobserve(entry.target);
 						}
 					});
 				}, observerOptions);

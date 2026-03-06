@@ -286,21 +286,16 @@
     updateHeroCountdown();
 
     // --- LOGIKA SCROLL LOCK INITIAL ---
-    // Jika IS_SCROLL_LOCKED aktif, kunci scroll body saat modal muncul.
     // Cek apakah undangan sudah pernah dibuka dalam sesi ini menggunakan sessionStorage.
     const isOpened = sessionStorage.getItem("invitation_opened") === "true";
-
-    if (IS_SCROLL_LOCKED && !isOpened) {
-        // Kunci scroll hanya jika belum dibuka
-        document.body.style.overflow = "hidden";
-    }
 
     if (isOpened) {
         // Jika sudah dibuka sebelumnya, langsung sembunyikan modal tanpa animasi
         if (modal) modal.style.display = "none";
         if (heroContent) heroContent.classList.remove("opacity-0");
-        // Pastikan scroll tidak terkunci
-        document.body.style.overflow = "";
+
+        // Beritahu index.astro untuk membuka kunci scroll
+        document.dispatchEvent(new CustomEvent("open-invitation"));
     }
 
     // --- APPLY STYLES TO CONTAINER ---
@@ -434,11 +429,9 @@
             "pointer-events-none",
         );
 
-        // 3. BUKA SCROLL LOCK (Jika aktif)
-        // Mengembalikan overflow body ke default agar halaman bisa di-scroll.
-        if (IS_SCROLL_LOCKED) {
-            document.body.style.overflow = "";
-        }
+        // 3. JALANKAN SINYAL BUKA UNDANGAN
+        // Mengirimkan event agar index.astro membuka kunci scroll global
+        document.dispatchEvent(new CustomEvent("open-invitation"));
 
         // 4. JALANKAN ANIMASI BERDASARKAN TOGGLE
         if (!IS_ANIMATION_ENABLED) {
@@ -493,6 +486,7 @@
                         modal.style.transform = "translateY(-100%)";
                         modal.style.opacity = "0";
                     }
+                    modal?.classList.add("-translate-y-full");
                     break;
                 default:
                     modal?.classList.add("opacity-0");
@@ -500,9 +494,13 @@
 
             // 5. MUNCULKAN KONTEN UTAMA (HERO)
             // Memberikan jeda sedikit agar animasi penarik tirai/buka pintu selesai
-            // Untuk slide-up, kita tunggu sampai animasi transisi selesai (sekitar 1.2s - 1.5s)
+            // PENTING: Matikan pointer-events agar tidak menghalangi scroll/sentuhan pada konten di bawahnya
             setTimeout(() => {
-                modal?.classList.add("hidden");
+                if (modal) {
+                    modal.style.pointerEvents = "none";
+                    modal.classList.add("hidden");
+                }
+
                 // Reveal Hero Content dengan efek fade-in (reveal)
                 if (heroContent) {
                     heroContent.classList.remove("opacity-0");
@@ -524,6 +522,7 @@
             rgba(0, 0, 0, 0.3),
             rgba(0, 0, 0, 0.6)
         );
+        z-index: 1; /* Pastikan di atas background tapi di bawah content */
     }
 
     /* Definisi Warna Gold */
@@ -633,7 +632,7 @@
             height: 100%;
             width: 100%;
             object-fit: cover;
-            z-index: -1; /* Pastikan di belakang */
+            z-index: 0; /* Ubah ke 0 agar tetap terlihat namun di belakang content (z-10) */
         }
         .countdown-item {
             min-width: 50px;

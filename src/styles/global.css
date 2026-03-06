@@ -20,12 +20,18 @@
    White: #FFFFFF / #FCFAFA (Bersih)
 */
 
+html,
 body {
   font-family: 'Montserrat', sans-serif;
   color: var(--dark-text);
   background-color: var(--soft-white);
   margin: 0;
+  padding: 0;
+  width: 100%;
   overflow-x: hidden;
+  /* Hanya cegah scroll horizontal */
+  -webkit-overflow-scrolling: touch;
+  /* Optimasi scroll halus di iOS */
 }
 
 h1,
