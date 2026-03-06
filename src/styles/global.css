@@ -27,6 +27,7 @@ html {
   -ms-overflow-style: none;
   /* IE and Edge */
   overflow-x: hidden;
+  scroll-padding-top: 2rem;
 }
 
 html::-webkit-scrollbar {
@@ -44,6 +45,9 @@ body {
   position: relative;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 h1,

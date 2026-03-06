@@ -22,6 +22,8 @@
                     <img
                         src="/assets/foto-groom.JPG"
                         alt="Groom"
+                        loading="lazy"
+                        decoding="async"
                         class="w-full h-full object-cover"
                     />
                 </div>
@@ -46,6 +48,8 @@
                     <img
                         src="/assets/jun-yi.jpeg"
                         alt="Bride"
+                        loading="lazy"
+                        decoding="async"
                         class="w-full h-full object-cover"
                     />
                 </div>
@@ -81,9 +85,8 @@
         border: 1px solid rgba(255, 255, 255, 0.3);
         border-radius: 2rem;
         box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
-        transition:
-            transform 0.3s ease,
-            box-shadow 0.3s ease;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        will-change: transform, backdrop-filter;
     }
 
     .glass-container:hover {

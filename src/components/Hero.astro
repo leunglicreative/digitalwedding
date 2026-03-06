@@ -91,6 +91,7 @@
 <section
     id="hero-section"
     class="relative min-h-screen flex items-center justify-center text-center px-4 overflow-hidden"
+    style="contain: paint;"
 >
     <!-- ID: hero-section-bg - Bagian ini mengontrol latar belakang SETELAH undangan dibuka -->
     <div
@@ -493,21 +494,21 @@
                 modal?.classList.add("opacity-0");
         }
 
-        // 5. MUNCULKAN KONTEN UTAMA (HERO)
-        // Reveal Hero Content dengan efek fade-in (reveal) - Lebih agresif
-        if (heroContent) {
-            heroContent.classList.remove("opacity-0");
-            heroContent.classList.add("animate-reveal");
-        }
-
-        // Cleanup modal setelah transisi selesai
+        // Cleanup modal - Lebih agresif
         setTimeout(() => {
             if (modal) {
                 modal.style.display = "none";
                 modal.style.visibility = "hidden";
                 modal.style.zIndex = "-1";
+                modal.style.pointerEvents = "none";
             }
-        }, 800); // Dipercepat dari 1200ms ke 800ms
+        }, 800); 
+
+        // Reveal Hero Content
+        if (heroContent) {
+            heroContent.classList.remove("opacity-0");
+            heroContent.classList.add("animate-reveal");
+        }
     });
 </script>
 

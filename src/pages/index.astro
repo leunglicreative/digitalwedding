@@ -33,11 +33,11 @@ const SECTION_ANIMATIONS = {
 	quote: "fade-up",
 	couple: "zoom-in",
 	story: "fade-right",
-	gallery: "fade-left",
+	gallery: "fade-up",
 	event: "fade-up",
-	rsvp: "zoom-in",
-	wish: "fade-right",
-	gift: "fade-left",
+	rsvp: "fade-up",
+	wish: "fade-up",
+	gift: "fade-up",
 	closing: "fade-up",
 };
 
@@ -236,26 +236,10 @@ const SECTION_VISIBILITY = {
 			}
 
 			function unlockScroll() {
-				document.documentElement.style.setProperty(
-					"overflow-x",
-					"hidden",
-					"important",
-				);
-				document.body.style.setProperty(
-					"overflow-x",
-					"hidden",
-					"important",
-				);
-				document.documentElement.style.setProperty(
-					"overflow-y",
-					"auto",
-					"important",
-				);
-				document.body.style.setProperty(
-					"overflow-y",
-					"auto",
-					"important",
-				);
+				document.documentElement.style.overflowX = "hidden";
+				document.body.style.overflowX = "hidden";
+				document.documentElement.style.overflowY = "auto";
+				document.body.style.overflowY = "auto";
 				document.body.style.height = "auto";
 				document.body.style.position = "relative";
 				document.body.style.webkitOverflowScrolling = "touch";
@@ -296,55 +280,20 @@ const SECTION_VISIBILITY = {
 
 <style is:global>
 	/* --- SISTEM ANIMASI KOMPLEKS (SCROLL REVEAL OPTIMIZED) --- */
-
-	/* Keadaan awal (Hidden) */
 	.reveal {
 		opacity: 0;
-		transition:
-			transform 0.8s cubic-bezier(0.2, 0, 0.2, 1),
-			opacity 0.8s ease-out;
+		transition: transform 0.8s cubic-bezier(0.2, 0, 0.2, 1), opacity 0.8s ease-out;
 		will-change: transform, opacity;
-		backface-visibility: hidden; /* Mencegah kedipan di Safari */
+		backface-visibility: hidden;
 	}
 
-	/* 1. Fade Up */
-	.reveal.fade-up {
-		transform: translateY(50px);
-	}
+	.reveal.fade-up { transform: translateY(30px); }
+	.reveal.fade-down { transform: translateY(-30px); }
+	.reveal.zoom-in { transform: scale(0.95); }
+	.reveal.zoom-out { transform: scale(1.05); }
 
-	/* 2. Fade Down */
-	.reveal.fade-down {
-		transform: translateY(-50px);
-	}
-
-	/* 3. Fade Left */
-	.reveal.fade-left {
-		transform: translateX(50px);
-	}
-
-	/* 4. Fade Right */
-	.reveal.fade-right {
-		transform: translateX(-50px);
-	}
-
-	/* 5. Zoom In */
-	.reveal.zoom-in {
-		transform: scale(0.8);
-	}
-
-	/* 6. Zoom Out */
-	.reveal.zoom-out {
-		transform: scale(1.2);
-	}
-
-	/* 7. Flip Up */
-	.reveal.flip-up {
-		transform: perspective(1000px) rotateX(-30deg);
-	}
-
-	/* Keadaan Akhir (Show/Active) ketika terpapar Intersection Observer */
 	.reveal.active {
-		opacity: 1;
-		transform: translate(0, 0) scale(1) rotateX(0) rotateY(0) !important;
+		opacity: 1 !important;
+		transform: none !important;
 	}
 </style>
