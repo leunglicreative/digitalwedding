@@ -23,18 +23,20 @@
 <div
     id="invitation-modal"
     class="fixed inset-0 z-100 flex items-center justify-center overflow-hidden px-12"
-    style="backface-visibility: hidden; transform: translateZ(0);"
+    style="backface-visibility: hidden; transform: translateZ(0); will-change: transform, opacity;"
 >
     <!-- Efek Panel (Untuk Door/Curtain) -->
     <!-- Panel ini akan menggunakan gambar yang sama dengan background agar transisi terlihat 'sobek' atau 'terbelah' -->
     <div
         id="panel-left"
         class="absolute inset-y-0 left-0 w-1/2 bg-cover bg-no-repeat transition-transform duration-1000 ease-in-out z-[-1] border-r border-gold/0"
+        style="will-change: transform;"
     >
     </div>
     <div
         id="panel-right"
         class="absolute inset-y-0 right-0 w-1/2 bg-cover bg-no-repeat transition-transform duration-1000 ease-in-out z-[-1] border-l border-gold/0"
+        style="will-change: transform;"
     >
     </div>
 
@@ -422,12 +424,13 @@
             music.remove(); // Hapus dari DOM agar tidak me-load data
         }
 
-        // 2. FADE OUT KONTEN TEKS
+        // 2. FADE OUT KONTEN TEKS & LOCK POINTERS
         modalContent?.classList.add(
             "opacity-0",
             "scale-90",
             "pointer-events-none",
         );
+        if (modal) modal.style.pointerEvents = "none";
 
         // 3. JALANKAN SINYAL BUKA UNDANGAN
         // Mengirimkan event agar index.astro membuka kunci scroll global
@@ -497,7 +500,9 @@
             // PENTING: Matikan pointer-events agar tidak menghalangi scroll/sentuhan pada konten di bawahnya
             setTimeout(() => {
                 if (modal) {
-                    modal.style.pointerEvents = "none";
+                    modal.style.display = "none";
+                    modal.style.visibility = "hidden";
+                    modal.style.zIndex = "-1";
                     modal.classList.add("hidden");
                 }
 

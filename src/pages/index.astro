@@ -229,6 +229,7 @@ const SECTION_VISIBILITY = {
 				document.documentElement.style.overflow = "hidden";
 				document.body.style.overflow = "hidden";
 				document.body.style.height = "100%";
+				document.body.style.webkitOverflowScrolling = "auto";
 			}
 
 			function unlockScroll() {
@@ -237,6 +238,7 @@ const SECTION_VISIBILITY = {
 				document.documentElement.style.overflowY = "";
 				document.body.style.overflowY = "";
 				document.body.style.height = "";
+				document.body.style.webkitOverflowScrolling = "touch";
 			}
 
 			// Kunci saat pertama kali load
