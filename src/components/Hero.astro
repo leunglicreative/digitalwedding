@@ -88,19 +88,19 @@
 <!-- Main Hero Content (Latar Belakang & Isi Terbuka) -->
 <section
     id="hero-section"
-    class="relative h-screen flex items-center justify-center text-center px-4 overflow-hidden"
+    class="relative min-h-screen flex items-center justify-center text-center px-4 overflow-hidden"
 >
     <!-- ID: hero-section-bg - Bagian ini mengontrol latar belakang SETELAH undangan dibuka -->
     <div
         id="hero-section-bg"
-        class="absolute inset-0 bg-cover bg-center brightness-75 transition-transform duration-1000 ease-out"
+        class="absolute inset-0 bg-cover bg-center brightness-75 transition-transform duration-1000 ease-out z-0"
     >
     </div>
 
     <!-- Main Hero Content (Teks Utama setelah terbuka) -->
     <div
         id="hero-content"
-        class="relative z-10 flex flex-col items-center justify-center min-h-screen text-center px-4 transition-opacity duration-1000 opacity-0"
+        class="relative z-10 flex flex-col items-center justify-center py-20 text-center px-4 transition-opacity duration-1000 opacity-0"
     >
         <span
             class="text-gold font-accent text-lg md:text-2xl mb-2 tracking-widest uppercase"
@@ -112,10 +112,30 @@
             Umar & <br class="md:hidden" /> Eliza
         </h1>
         <p
-            class="text-white/80 font-accent text-sm md:text-lg max-w-2xl px-4 text-balance"
+            class="text-white/80 font-accent text-sm md:text-lg max-w-2xl px-4 text-balance mb-6"
         >
             Kami mengundang Anda untuk merayakan hari kebahagiaan kami
         </p>
+
+        <!-- Countdown Kompak (Kecil & Tidak Mengganggu) -->
+        <div id="hero-countdown" class="flex gap-3 animate-fade-in mt-2">
+            <div class="countdown-item">
+                <span id="hero-days" class="number">00</span>
+                <span class="label">Hari</span>
+            </div>
+            <div class="countdown-item">
+                <span id="hero-hours" class="number">00</span>
+                <span class="label">Jam</span>
+            </div>
+            <div class="countdown-item">
+                <span id="hero-minutes" class="number">00</span>
+                <span class="label">Menit</span>
+            </div>
+            <div class="countdown-item">
+                <span id="hero-seconds" class="number">00</span>
+                <span class="label">Detik</span>
+            </div>
+        </div>
     </div>
 </section>
 
@@ -152,8 +172,9 @@
         | "fade-zoom-out"
         | "fade-blur"
         | "circle"
-        | "petals";
-    const EF_TYPE = "fade-blur" as EffectType;
+        | "petals"
+        | "slide-up";
+    const EF_TYPE = "slide-up" as EffectType;
 
     /**
      * ==========================================
@@ -181,6 +202,7 @@
     /**
      * ==========================================
      * CONFIGURASI CONTAINER KONTEN (GLASSMORPHISM)
+     * UNTUK MODAL SEBELUM MASUK HERO
      * ==========================================
      */
 
@@ -228,6 +250,40 @@
     ) as HTMLElement;
     const music = document.getElementById("bg-music") as HTMLAudioElement;
     const petalsContainer = document.getElementById("petals-container");
+
+    /**
+     * ==========================================
+     * LOGIKA COUNTDOWN HERO
+     * ==========================================
+     */
+    const TARGET_DATE = new Date("2026-12-12T08:00:00").getTime();
+
+    function updateHeroCountdown() {
+        const now = new Date().getTime();
+        const distance = TARGET_DATE - now;
+
+        if (distance < 0) return;
+
+        const d = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const h = Math.floor(
+            (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+        );
+        const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const s = Math.floor((distance % (1000 * 60)) / 1000);
+
+        const dEl = document.getElementById("hero-days");
+        const hEl = document.getElementById("hero-hours");
+        const mEl = document.getElementById("hero-minutes");
+        const sEl = document.getElementById("hero-seconds");
+
+        if (dEl) dEl.innerText = d.toString().padStart(2, "0");
+        if (hEl) hEl.innerText = h.toString().padStart(2, "0");
+        if (mEl) mEl.innerText = m.toString().padStart(2, "0");
+        if (sEl) sEl.innerText = s.toString().padStart(2, "0");
+    }
+
+    setInterval(updateHeroCountdown, 1000);
+    updateHeroCountdown();
 
     // --- LOGIKA SCROLL LOCK INITIAL ---
     // Jika IS_SCROLL_LOCKED aktif, kunci scroll body saat modal muncul.
@@ -431,15 +487,27 @@
                 case "petals":
                     modal?.classList.add("opacity-0");
                     break;
+                case "slide-up":
+                    // Efek slide-up: modal bergeser ke atas dan menghilang
+                    if (modal) {
+                        modal.style.transform = "translateY(-100%)";
+                        modal.style.opacity = "0";
+                    }
+                    break;
                 default:
                     modal?.classList.add("opacity-0");
             }
 
             // 5. MUNCULKAN KONTEN UTAMA (HERO)
             // Memberikan jeda sedikit agar animasi penarik tirai/buka pintu selesai
+            // Untuk slide-up, kita tunggu sampai animasi transisi selesai (sekitar 1.2s - 1.5s)
             setTimeout(() => {
                 modal?.classList.add("hidden");
-                heroContent?.classList.remove("opacity-0");
+                // Reveal Hero Content dengan efek fade-in (reveal)
+                if (heroContent) {
+                    heroContent.classList.remove("opacity-0");
+                    heroContent.classList.add("animate-reveal");
+                }
             }, 1200);
         }, 200);
     });
@@ -502,7 +570,77 @@
         }
     }
 
+    /* Efek Reveal untuk Hero Content */
+    .animate-reveal {
+        animation: revealEffect 1.5s ease-out forwards;
+    }
+
+    @keyframes revealEffect {
+        from {
+            opacity: 0;
+            filter: blur(10px);
+            transform: scale(0.9);
+        }
+        to {
+            opacity: 1;
+            filter: blur(0);
+            transform: scale(1);
+        }
+    }
+
     #invitation-modal {
-        transition: all 1.5s ease-in-out;
+        transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Styling Countdown Kompak di Hero */
+    .countdown-item {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 0.5rem 0.8rem;
+        border-radius: 0.75rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-width: 60px;
+    }
+
+    .countdown-item .number {
+        color: white;
+        font-weight: 700;
+        font-size: 1.25rem;
+        line-height: 1;
+    }
+
+    .countdown-item .label {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-top: 2px;
+    }
+
+    /* Perbaikan Background pada Mobile (Ultra Responsive) */
+    @media (max-width: 768px) {
+        #hero-section {
+            min-height: 100svh; /* Small viewvh untuk browser mobile */
+            height: 100dvh; /* Dynamic height untuk menyesuaikan UI browser */
+        }
+        #hero-section-bg {
+            position: absolute;
+            inset: 0;
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+            z-index: -1; /* Pastikan di belakang */
+        }
+        .countdown-item {
+            min-width: 50px;
+            padding: 0.4rem 0.6rem;
+        }
+        .countdown-item .number {
+            font-size: 1rem;
+        }
     }
 </style>

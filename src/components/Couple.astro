@@ -1,22 +1,23 @@
 ---
 /* 
-   MODIFIKASI COUPLE SECTION:
-   - Hubungkan ke link media sosial atau edit biodata.
-   - Gunakan font serif untuk nama agar terlihat lebih elegan.
+   REVISI COUPLE SECTION:
+   - Menghilangkan modal dan menampilkan biodata langsung dalam container.
+   - Menggunakan efek glassmorphism (blur & semi-transparent) untuk container.
+   - Desain kotak (rounded rectangle) yang memuat foto dan informasi pasangan.
 */
 ---
 
 <section id="couple" class="py-20 bg-soft-white text-center px-4">
-    <div class="max-w-4xl mx-auto animate-fade-in">
+    <div class="max-w-6xl mx-auto animate-fade-in">
         <h2 class="font-serif text-4xl md:text-5xl text-gold mb-12 italic">
             The Happy Couple
         </h2>
 
-        <div class="grid md:grid-cols-2 gap-12 items-center">
-            <!-- Pengantin Pria -->
-            <div class="flex flex-col items-center">
+        <div class="grid md:grid-cols-2 gap-8 items-stretch">
+            <!-- Container Pengantin Pria (Groom) -->
+            <div class="glass-container p-8 flex flex-col items-center">
                 <div
-                    class="w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden mb-6 border-4 border-gold shadow-lg"
+                    class="w-68 h-78 md:w-56 md:h-56 overflow-hidden mb-6 border-4 border-gold shadow-lg rounded-2xl"
                 >
                     <img
                         src="/assets/foto-groom.JPG"
@@ -24,16 +25,23 @@
                         class="w-full h-full object-cover"
                     />
                 </div>
-                <h3 class="font-serif text-3xl text-[#333] mb-2">Umar</h3>
-                <p class="text-gray-600 mb-4 italic">
+                <h3 class="font-serif text-3xl text-gold mb-2">Umar</h3>
+                <p class="text-[#333] mb-4 italic">
                     Putra dari Bapak Lord Montague & <br /> Ibu Lady Montague
                 </p>
+                <!-- <div
+                    class="w-full border-t border-gold/30 pt-4 mt-auto text-left text-sm text-gray-700 space-y-2"
+                >
+                    <p><strong>Nama Lengkap:</strong> Umar Montague</p>
+                    <p><strong>Pekerjaan:</strong> Web Developer</p>
+                    <p><strong>Hobi:</strong> Coding, Photography, Traveling</p>
+                </div> -->
             </div>
 
-            <!-- Pengantin Wanita -->
-            <div class="flex flex-col items-center">
+            <!-- Container Pengantin Wanita (Bride) -->
+            <div class="glass-container p-8 flex flex-col items-center">
                 <div
-                    class="w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden mb-6 border-4 border-gold shadow-lg"
+                    class="w-68 h-78 md:w-56 md:h-56 overflow-hidden mb-6 border-4 border-gold shadow-lg rounded-2xl"
                 >
                     <img
                         src="/assets/jun-yi.jpeg"
@@ -41,11 +49,60 @@
                         class="w-full h-full object-cover"
                     />
                 </div>
-                <h3 class="font-serif text-3xl text-[#333] mb-2">Eliza</h3>
-                <p class="text-gray-600 mb-4 italic">
+                <h3 class="font-serif text-3xl text-gold mb-2">Eliza</h3>
+                <p class="text-[#333] mb-4 italic">
                     Putri dari Bapak Lord Capulet & <br /> Ibu Lady Capulet
                 </p>
+                <!-- <div
+                    class="w-full border-t border-gold/30 pt-4 mt-auto text-left text-sm text-gray-700 space-y-2"
+                >
+                    <p><strong>Nama Lengkap:</strong> Eliza Capulet</p>
+                    <p><strong>Pekerjaan:</strong> Graphic Designer</p>
+                    <p><strong>Hobi:</strong> Drawing, Reading, Music</p>
+                </div> -->
             </div>
         </div>
     </div>
 </section>
+
+<style>
+    /* Definisi Warna & Efek Glassmorphism */
+    .text-gold {
+        color: #d4af37;
+    }
+    .border-gold {
+        border-color: #d4af37;
+    }
+
+    .glass-container {
+        background: rgba(255, 255, 255, 0.4);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 2rem;
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
+        transition:
+            transform 0.3s ease,
+            box-shadow 0.3s ease;
+    }
+
+    .glass-container:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.1);
+    }
+
+    /* Animasi fade in */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    .animate-fade-in {
+        animation: fadeIn 1s ease-out forwards;
+    }
+</style>
