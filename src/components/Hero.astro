@@ -195,7 +195,7 @@
 
     // B. AKTIFKAN EFEK ANIMASI PEMBUKAAN?
     // Ganti ke 'false' jika ingin mematikan semua efek animasi (langsung hilang).
-    const IS_ANIMATION_ENABLED = true;
+    const IS_ANIMATION_ENABLED = false;
 
     // C. KUNCI SCROLL SEBELUM DIBUKA?
     // true  = Halaman tidak bisa di-scroll sebelum tombol diklik (direkomendasikan).
@@ -502,7 +502,7 @@
                 modal.style.zIndex = "-1";
                 modal.style.pointerEvents = "none";
             }
-        }, 800); 
+        }, 800);
 
         // Reveal Hero Content
         if (heroContent) {
