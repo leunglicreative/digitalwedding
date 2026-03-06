@@ -20,7 +20,19 @@
    White: #FFFFFF / #FCFAFA (Bersih)
 */
 
-html,
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+}
+
+html::-webkit-scrollbar {
+  display: none;
+  /* Chrome, Safari and Opera */
+}
+
 body {
   font-family: 'Montserrat', sans-serif;
   color: var(--dark-text);
@@ -29,9 +41,7 @@ body {
   padding: 0;
   width: 100%;
   overflow-x: hidden;
-  /* Hanya cegah scroll horizontal */
   -webkit-overflow-scrolling: touch;
-  /* Optimasi scroll halus di iOS */
 }
 
 h1,
