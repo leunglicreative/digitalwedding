@@ -430,89 +430,84 @@
             "scale-90",
             "pointer-events-none",
         );
-        if (modal) modal.style.pointerEvents = "none";
+        if (modal) {
+            modal.style.pointerEvents = "none";
+            modal.style.zIndex = "1"; // Turunkan z-index agar tidak menghalangi scroll
+        }
 
-        // 3. JALANKAN SINYAL BUKA UNDANGAN
-        // Mengirimkan event agar index.astro membuka kunci scroll global
+        // 3. JALANKAN SINYAL BUKA UNDANGAN (LGSG UNLOCK SCROLL)
         document.dispatchEvent(new CustomEvent("open-invitation"));
 
-        // 4. JALANKAN ANIMASI BERDASARKAN TOGGLE
+        // 4. JALANKAN ANIMASI BERDASARKAN TOGGLE (TANPA DELAY 200ms)
         if (!IS_ANIMATION_ENABLED) {
-            // Jika animasi dimatikan, langsung sembunyikan modal
-            modal?.classList.add("hidden");
+            if (modal) modal.style.display = "none";
             heroContent?.classList.remove("opacity-0");
             return;
         }
 
-        setTimeout(() => {
-            switch (EF_TYPE) {
-                case "door":
-                    if (panelLeft)
-                        panelLeft.style.transform =
-                            "translateX(-100%) translateZ(0)";
-                    if (panelRight)
-                        panelRight.style.transform =
-                            "translateX(100%) translateZ(0)";
-                    modalBg?.classList.add("opacity-0");
-                    break;
-                case "curtain":
-                    if (panelLeft) {
-                        panelLeft.style.width = "100%";
-                        panelLeft.style.backgroundSize = "cover";
-                        panelLeft.style.transform =
-                            "translateY(-100%) translateZ(0)";
-                    }
-                    if (panelRight) panelRight.style.display = "none";
-                    modalBg?.classList.add("opacity-0");
-                    break;
-                case "fade-zoom":
-                    modal?.classList.add("opacity-0", "scale-150");
-                    break;
-                case "fade-zoom-out":
-                    modal?.classList.add("opacity-0", "scale-50");
-                    break;
-                case "fade-blur":
-                    modal?.classList.add("opacity-0", "blur-3xl");
-                    break;
-                case "circle":
-                    if (modal) {
-                        modal.style.clipPath = "circle(0% at 50% 50%)";
-                        modal.style.transition = "clip-path 1.2s ease-in-out";
-                    }
-                    break;
-                case "petals":
-                    modal?.classList.add("opacity-0");
-                    break;
-                case "slide-up":
-                    // Efek slide-up: modal bergeser ke atas dan menghilang
-                    if (modal) {
-                        modal.style.transform = "translateY(-100%)";
-                        modal.style.opacity = "0";
-                    }
-                    modal?.classList.add("-translate-y-full");
-                    break;
-                default:
-                    modal?.classList.add("opacity-0");
-            }
-
-            // 5. MUNCULKAN KONTEN UTAMA (HERO)
-            // Memberikan jeda sedikit agar animasi penarik tirai/buka pintu selesai
-            // PENTING: Matikan pointer-events agar tidak menghalangi scroll/sentuhan pada konten di bawahnya
-            setTimeout(() => {
+        switch (EF_TYPE) {
+            case "door":
+                if (panelLeft)
+                    panelLeft.style.transform =
+                        "translateX(-100%) translateZ(0)";
+                if (panelRight)
+                    panelRight.style.transform =
+                        "translateX(100%) translateZ(0)";
+                modalBg?.classList.add("opacity-0");
+                break;
+            case "curtain":
+                if (panelLeft) {
+                    panelLeft.style.width = "100%";
+                    panelLeft.style.backgroundSize = "cover";
+                    panelLeft.style.transform =
+                        "translateY(-100%) translateZ(0)";
+                }
+                if (panelRight) panelRight.style.display = "none";
+                modalBg?.classList.add("opacity-0");
+                break;
+            case "fade-zoom":
+                modal?.classList.add("opacity-0", "scale-150");
+                break;
+            case "fade-zoom-out":
+                modal?.classList.add("opacity-0", "scale-50");
+                break;
+            case "fade-blur":
+                modal?.classList.add("opacity-0", "blur-3xl");
+                break;
+            case "circle":
                 if (modal) {
-                    modal.style.display = "none";
-                    modal.style.visibility = "hidden";
-                    modal.style.zIndex = "-1";
-                    modal.classList.add("hidden");
+                    modal.style.clipPath = "circle(0% at 50% 50%)";
+                    modal.style.transition = "clip-path 1.2s ease-in-out";
                 }
+                break;
+            case "petals":
+                modal?.classList.add("opacity-0");
+                break;
+            case "slide-up":
+                if (modal) {
+                    modal.style.transform = "translateY(-110%)"; // Tarik lebih jauh ke atas
+                    modal.style.opacity = "0";
+                }
+                break;
+            default:
+                modal?.classList.add("opacity-0");
+        }
 
-                // Reveal Hero Content dengan efek fade-in (reveal)
-                if (heroContent) {
-                    heroContent.classList.remove("opacity-0");
-                    heroContent.classList.add("animate-reveal");
-                }
-            }, 1200);
-        }, 200);
+        // 5. MUNCULKAN KONTEN UTAMA (HERO)
+        // Reveal Hero Content dengan efek fade-in (reveal) - Lebih agresif
+        if (heroContent) {
+            heroContent.classList.remove("opacity-0");
+            heroContent.classList.add("animate-reveal");
+        }
+
+        // Cleanup modal setelah transisi selesai
+        setTimeout(() => {
+            if (modal) {
+                modal.style.display = "none";
+                modal.style.visibility = "hidden";
+                modal.style.zIndex = "-1";
+            }
+        }, 800); // Dipercepat dari 1200ms ke 800ms
     });
 </script>
 
@@ -582,12 +577,10 @@
     @keyframes revealEffect {
         from {
             opacity: 0;
-            filter: blur(10px);
-            transform: scale(0.9);
+            transform: scale(0.95); /* Zoom diperhalus */
         }
         to {
             opacity: 1;
-            filter: blur(0);
             transform: scale(1);
         }
     }

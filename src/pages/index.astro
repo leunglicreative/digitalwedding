@@ -60,7 +60,10 @@ const SECTION_VISIBILITY = {
 <html lang="id">
 	<head>
 		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0, maximum-scale=5.0"
+		/>
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
@@ -233,11 +236,28 @@ const SECTION_VISIBILITY = {
 			}
 
 			function unlockScroll() {
-				document.documentElement.style.overflowX = "hidden";
-				document.body.style.overflowX = "hidden";
-				document.documentElement.style.overflowY = "";
-				document.body.style.overflowY = "";
-				document.body.style.height = "";
+				document.documentElement.style.setProperty(
+					"overflow-x",
+					"hidden",
+					"important",
+				);
+				document.body.style.setProperty(
+					"overflow-x",
+					"hidden",
+					"important",
+				);
+				document.documentElement.style.setProperty(
+					"overflow-y",
+					"auto",
+					"important",
+				);
+				document.body.style.setProperty(
+					"overflow-y",
+					"auto",
+					"important",
+				);
+				document.body.style.height = "auto";
+				document.body.style.position = "relative";
 				document.body.style.webkitOverflowScrolling = "touch";
 			}
 
