@@ -5,8 +5,8 @@
    - Ubah nama pasangan di bagian akhir.
 */
 interface Props {
-    groom: string;
-    bride: string;
+    groom: { name: string };
+    bride: { name: string };
 }
 
 const { groom, bride } = Astro.props;
@@ -43,7 +43,7 @@ const { groom, bride } = Astro.props;
                 Kami yang berbahagia,
             </p>
             <h1 class="font-serif text-5xl text-[#333] mb-4">
-                {groom} & {bride}
+                {groom.name} & {bride.name}
             </h1>
             <p class="text-gray-400 text-sm mt-12">
                 © 2026 Leungli Creative Digital Wedding <br />- Made with Love

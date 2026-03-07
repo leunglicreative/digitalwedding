@@ -6,8 +6,8 @@
    - Menggunakan data dari props index.astro.
 */
 interface Props {
-    groom: string;
-    bride: string;
+    groom: { name: string };
+    bride: { name: string };
 }
 
 const { groom, bride } = Astro.props;
@@ -39,7 +39,7 @@ const { groom, bride } = Astro.props;
 
                 <div class="flex flex-col gap-4">
                     <a
-                        href={`https://calendar.google.com/calendar/render?action=TEMPLATE&text=Akad+Nikah+${groom}+%26+${bride}&dates=20261212T010000Z/20261212T030000Z&details=Akad+Nikah+${groom}+and+${bride}&location=Masjid+Raya+Al-Muhajirin`}
+                        href={`https://calendar.google.com/calendar/render?action=TEMPLATE&text=Akad+Nikah+${groom.name}+%26+${bride.name}&dates=20261212T010000Z/20261212T030000Z&details=Akad+Nikah+${groom.name}+and+${bride.name}&location=Masjid+Raya+Al-Muhajirin`}
                         target="_blank"
                         class="bg-gold text-white px-6 py-2 rounded-full text-sm font-semibold hover:bg-[#b8952d] transition-colors"
                     >
@@ -74,7 +74,7 @@ const { groom, bride } = Astro.props;
 
                 <div class="flex flex-col gap-4">
                     <a
-                        href={`https://calendar.google.com/calendar/render?action=TEMPLATE&text=Resepsi+${groom}+%26+${bride}&dates=20261212T040000Z/20261212T070000Z&details=Resepsi+${groom}+and+${bride}&location=Grand+Ballroom+Hotel`}
+                        href={`https://calendar.google.com/calendar/render?action=TEMPLATE&text=Resepsi+${groom.name}+%26+${bride.name}&dates=20261212T040000Z/20261212T070000Z&details=Resepsi+${groom.name}+and+${bride.name}&location=Grand+Ballroom+Hotel`}
                         target="_blank"
                         class="bg-gold text-white px-6 py-2 rounded-full text-sm font-semibold hover:bg-[#b8952d] transition-colors"
                     >

@@ -11,15 +11,15 @@ const OPENING_EFFECT = "slide-up";
 
 // 1. DATA PENGANTIN (Diterima dari props index.astro)
 interface Props {
-    groom: string;
-    bride: string;
+    groom: { name: string };
+    bride: { name: string };
 }
 
 const { groom, bride } = Astro.props;
 
 const GATE_DATA = {
-    groom: groom || "Umar",
-    bride: bride || "Nazwa",
+    groom: groom.name || "Umar",
+    bride: bride.name || "Nazwa",
     gateBg: "/assets/bg-hero.jpg",
 };
 

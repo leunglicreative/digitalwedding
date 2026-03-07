@@ -6,8 +6,8 @@
  */
 
 interface Props {
-    groom: string;
-    bride: string;
+    groom: { name: string };
+    bride: { name: string };
 }
 
 const { groom, bride } = Astro.props;
@@ -16,19 +16,19 @@ const { groom, bride } = Astro.props;
 const BANK_BCA = {
     logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Bank_Central_Asia.svg/1200px-Bank_Central_Asia.svg.png",
     number: "1234567890",
-    owner: groom,
+    owner: groom.name,
 };
 
 const BANK_MANDIRI = {
     logo: "https://upload.wikimedia.org/wikipedia/id/thumb/f/fa/Bank_Mandiri_logo.svg/1200px-Bank_Mandiri_logo.svg.png",
     number: "0987654321",
-    owner: bride,
+    owner: bride.name,
 };
 
 // 2. DATA ALAMAT PENGIRIMAN
 const SHIPPING_ADDRESS = {
     title: "Kirim Kado Fisik",
-    receiver: `${groom} & ${bride}`,
+    receiver: `${groom.name} & ${bride.name}`,
     fullAddress:
         "Jl. Pernikahan Indah No. 88, Kec. Kebahagiaan, Kota Cinta, 12345",
     // Ganti Link Iframe Google Maps di bawah ini (Ambil dari Google Maps -> Share -> Embed a map)

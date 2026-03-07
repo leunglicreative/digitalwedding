@@ -9,15 +9,15 @@
 */
 
 interface Props {
-    groom: string;
-    bride: string;
+    groom: { name: string };
+    bride: { name: string };
 }
 
 const { groom, bride } = Astro.props;
 
 const HERO_DATA = {
-    groom: groom || "Umar",
-    bride: bride || "Nazwa",
+    groom: groom.name || "",
+    bride: bride.name || "",
     date: "2026-03-12T08:00:00",
     mainHeroBg:
         "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2070&auto=format&fit=crop",
