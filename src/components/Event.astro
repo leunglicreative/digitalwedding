@@ -3,7 +3,14 @@
    MODIFIKASI EVENT DETAIL:
    - Ganti link Google Maps dengan link lokasi acara asli.
    - Edit tanggal, waktu, dan lokasi resepsi/akad.
+   - Menggunakan data dari props index.astro.
 */
+interface Props {
+    groom: string;
+    bride: string;
+}
+
+const { groom, bride } = Astro.props;
 ---
 
 <section id="event" class="py-20 bg-soft-white px-4 text-center">
@@ -32,7 +39,7 @@
 
                 <div class="flex flex-col gap-4">
                     <a
-                        href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Akad+Nikah+Romeo+%26+Juliet&dates=20261212T010000Z/20261212T030000Z&details=Akad+Nikah+Romeo+and+Juliet&location=Masjid+Raya+Al-Muhajirin"
+                        href={`https://calendar.google.com/calendar/render?action=TEMPLATE&text=Akad+Nikah+${groom}+%26+${bride}&dates=20261212T010000Z/20261212T030000Z&details=Akad+Nikah+${groom}+and+${bride}&location=Masjid+Raya+Al-Muhajirin`}
                         target="_blank"
                         class="bg-gold text-white px-6 py-2 rounded-full text-sm font-semibold hover:bg-[#b8952d] transition-colors"
                     >
@@ -67,7 +74,7 @@
 
                 <div class="flex flex-col gap-4">
                     <a
-                        href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Resepsi+Romeo+%26+Juliet&dates=20261212T040000Z/20261212T070000Z&details=Resepsi+Romeo+and+Juliet&location=Grand+Ballroom+Hotel"
+                        href={`https://calendar.google.com/calendar/render?action=TEMPLATE&text=Resepsi+${groom}+%26+${bride}&dates=20261212T040000Z/20261212T070000Z&details=Resepsi+${groom}+and+${bride}&location=Grand+Ballroom+Hotel`}
                         target="_blank"
                         class="bg-gold text-white px-6 py-2 rounded-full text-sm font-semibold hover:bg-[#b8952d] transition-colors"
                     >

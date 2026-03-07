@@ -29,6 +29,13 @@ const SECTION_VISIBILITY = {
 	gift: true,
 	closing: true,
 };
+
+// --- KONFIGURASI GLOBAL DATA PERNIKAHAN ---
+// Cukup ganti di sini untuk merubah nama di seluruh website
+const WEDDING_CONFIG = {
+	groom: "Umar",
+	bride: "Nazwa",
+};
 ---
 
 <html lang="id">
@@ -48,18 +55,18 @@ const SECTION_VISIBILITY = {
 	</head>
 
 	<body class="overflow-x-hidden">
-		<InvitationGate />
-		<Hero />
+		<InvitationGate {...WEDDING_CONFIG} />
+		<Hero {...WEDDING_CONFIG} />
 		{SECTION_VISIBILITY.quote && <Quote />}
-		{SECTION_VISIBILITY.couple && <Couple />}
+		{SECTION_VISIBILITY.couple && <Couple {...WEDDING_CONFIG} />}
 		{SECTION_VISIBILITY.story && <Story />}
 		{SECTION_VISIBILITY.gallery && <Gallery />}
-		{SECTION_VISIBILITY.event && <Event />}
+		{SECTION_VISIBILITY.event && <Event {...WEDDING_CONFIG} />}
 		{SECTION_VISIBILITY.countdown && <Countdown />}
 		{SECTION_VISIBILITY.rsvp && <RSVP />}
 		{SECTION_VISIBILITY.wish && <Wish />}
-		{SECTION_VISIBILITY.gift && <WeddingGift />}
-		{SECTION_VISIBILITY.closing && <Closing />}
+		{SECTION_VISIBILITY.gift && <WeddingGift {...WEDDING_CONFIG} />}
+		{SECTION_VISIBILITY.closing && <Closing {...WEDDING_CONFIG} />}
 		<FloatingNav />
 	</body>
 </html>

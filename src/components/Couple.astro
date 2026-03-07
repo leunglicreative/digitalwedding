@@ -4,7 +4,14 @@
    - Menghilangkan modal dan menampilkan biodata langsung dalam container.
    - Menggunakan efek glassmorphism (blur & semi-transparent) untuk container.
    - Desain kotak (rounded rectangle) yang memuat foto dan informasi pasangan.
+   - Menggunakan data dari props index.astro.
 */
+interface Props {
+    groom: string;
+    bride: string;
+}
+
+const { groom, bride } = Astro.props;
 ---
 
 <section id="couple" class="py-20 bg-soft-white text-center px-4">
@@ -27,7 +34,9 @@
                         class="w-full h-full object-cover"
                     />
                 </div>
-                <h3 class="font-serif text-3xl text-gold mb-2">Umar</h3>
+                    />
+                </div>
+                <h3 class="font-serif text-3xl text-gold mb-2">{groom}</h3>
                 <p class="text-[#333] mb-4 italic">
                     Putra dari Bapak Lord Montague & <br /> Ibu Lady Montague
                 </p>
@@ -53,7 +62,9 @@
                         class="w-full h-full object-cover"
                     />
                 </div>
-                <h3 class="font-serif text-3xl text-gold mb-2">Nazwa</h3>
+                    />
+                </div>
+                <h3 class="font-serif text-3xl text-gold mb-2">{bride}</h3>
                 <p class="text-[#333] mb-4 italic">
                     Putri dari Bapak Lord Capulet & <br /> Ibu Lady Capulet
                 </p>

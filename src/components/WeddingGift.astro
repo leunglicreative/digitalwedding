@@ -5,23 +5,30 @@
  * - Anda dapat mengganti logo bank, nomor rekening, Alamat, dan link Google Maps di sini.
  */
 
+interface Props {
+    groom: string;
+    bride: string;
+}
+
+const { groom, bride } = Astro.props;
+
 // 1. DATA REKENING
 const BANK_BCA = {
     logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Bank_Central_Asia.svg/1200px-Bank_Central_Asia.svg.png",
     number: "1234567890",
-    owner: "Umar",
+    owner: groom,
 };
 
 const BANK_MANDIRI = {
     logo: "https://upload.wikimedia.org/wikipedia/id/thumb/f/fa/Bank_Mandiri_logo.svg/1200px-Bank_Mandiri_logo.svg.png",
     number: "0987654321",
-    owner: "Eliza",
+    owner: bride,
 };
 
 // 2. DATA ALAMAT PENGIRIMAN
 const SHIPPING_ADDRESS = {
     title: "Kirim Kado Fisik",
-    receiver: "Umar & Eliza",
+    receiver: `${groom} & ${bride}`,
     fullAddress:
         "Jl. Pernikahan Indah No. 88, Kec. Kebahagiaan, Kota Cinta, 12345",
     // Ganti Link Iframe Google Maps di bawah ini (Ambil dari Google Maps -> Share -> Embed a map)
@@ -33,9 +40,7 @@ const SHIPPING_ADDRESS = {
 <section id="gift" class="py-20 bg-blush px-4 text-center overflow-hidden">
     <div class="max-w-4xl mx-auto">
         <!-- Judul Bagian -->
-        <h2 class="font-serif text-4xl text-gold mb-6 italic">
-            Wedding Gift
-        </h2>
+        <h2 class="font-serif text-4xl text-gold mb-6 italic">Wedding Gift</h2>
         <p class="text-gray-600 mb-12 max-w-2xl mx-auto">
             Doa restu Anda merupakan karunia terindah bagi kami. Namun jika Anda
             ingin memberikan tanda kasih, Anda dapat mengirimkannya melalui:
@@ -66,7 +71,7 @@ const SHIPPING_ADDRESS = {
                     <!-- Tombol Salin dengan Rekening BCA -->
                     <button
                         data-copy={BANK_BCA.number}
-                        class="copy-btn w-full max-w-[200px] relative overflow-hidden bg-gradient-to-r from-gold via-[#F5D17E] to-gold bg-[length:200%_auto] text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-[100%_center] transition-all duration-500 active:scale-95 shadow-md hover:shadow-gold/20"
+                        class="copy-btn w-full max-w-[200px] relative overflow-hidden bg-linear-to-r from-gold via-[#F5D17E] to-gold bg-size-[200%_auto] text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-position-[100%_center] transition-all duration-500 active:scale-95 shadow-md hover:shadow-gold/20"
                     >
                         <span>Salin No. Rekening</span>
                     </button>
@@ -105,7 +110,7 @@ const SHIPPING_ADDRESS = {
                     <!-- Tombol Salin dengan Rekening Mandiri -->
                     <button
                         data-copy={BANK_MANDIRI.number}
-                        class="copy-btn w-full max-w-[200px] relative overflow-hidden bg-gradient-to-r from-gold via-[#F5D17E] to-gold bg-[length:200%_auto] text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-[100%_center] transition-all duration-500 active:scale-95 shadow-md hover:shadow-gold/20"
+                        class="copy-btn w-full max-w-[200px] relative overflow-hidden bg-linear-to-r from-gold via-[#F5D17E] to-gold bg-size-[200%_auto] text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-position-[100%_center] transition-all duration-500 active:scale-95 shadow-md hover:shadow-gold/20"
                     >
                         <span>Salin No. Rekening</span>
                     </button>
@@ -231,7 +236,8 @@ const SHIPPING_ADDRESS = {
     copyButtons.forEach((btn) => {
         btn.addEventListener("click", async () => {
             const textToCopy = btn.getAttribute("data-copy") || "";
-            const successMsg = btn.parentElement?.querySelector(".copy-success");
+            const successMsg =
+                btn.parentElement?.querySelector(".copy-success");
 
             try {
                 // Gunakan Clipboard API
@@ -245,11 +251,14 @@ const SHIPPING_ADDRESS = {
                 if (successMsg) {
                     successMsg.classList.remove("opacity-0", "translate-y-2");
                     successMsg.classList.add("opacity-100", "translate-y-0");
-                    
+
                     // Sembunyikan pesan setelah 2 detik
                     setTimeout(() => {
                         successMsg.classList.add("opacity-0", "translate-y-2");
-                        successMsg.classList.remove("opacity-100", "translate-y-0");
+                        successMsg.classList.remove(
+                            "opacity-100",
+                            "translate-y-0",
+                        );
                     }, 2000);
                 }
             } catch (err) {

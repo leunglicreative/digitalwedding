@@ -13,14 +13,14 @@ const ENABLE_MUSIC_CONTROL = true; // true = Tampilkan tombol musik (jika musik 
     ENABLE_FLOATING_NAV && (
         <div
             id="floating-nav"
-            class="fixed bottom-4 right-4 md:bottom-8 md:right-8 z-[999] flex flex-col gap-3 md:gap-4 transition-all duration-500 translate-x-20 opacity-0"
+            class="fixed bottom-4 right-4 md:bottom-8 md:right-8 z-999 flex flex-col gap-3 md:gap-4 transition-all duration-500 translate-x-20 opacity-0"
             style="will-change: transform, opacity;"
         >
             {/* Tombol Kontrol Musik */}
             {ENABLE_MUSIC_CONTROL && (
                 <button
                     id="music-toggle-btn"
-                    class="w-10 h-10 md:w-12 md:h-12 bg-white/90 backdrop-blur-md border border-gold/30 rounded-full flex items-center justify-center text-gold shadow-lg hover:scale-110 active:scale-95 transition-all group hidden"
+                    class="w-10 h-10 md:w-12 md:h-12 bg-white/90 backdrop-blur-md border border-gold/30 rounded-full items-center justify-center text-gold shadow-lg hover:scale-110 active:scale-95 transition-all group hidden"
                     style="will-change: transform;"
                     title="Play/Pause Music"
                 >
@@ -117,6 +117,7 @@ const ENABLE_MUSIC_CONTROL = true; // true = Tampilkan tombol musik (jika musik 
 
         // Tampilkan tombol musik jika element audio ada
         musicBtn.classList.remove("hidden");
+        musicBtn.classList.add("flex");
 
         musicBtn.addEventListener("click", () => {
             if (bgMusic.paused) {

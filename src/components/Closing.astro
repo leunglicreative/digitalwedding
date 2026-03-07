@@ -4,6 +4,12 @@
    - Ganti teks penutup sesuai keinginan.
    - Ubah nama pasangan di bagian akhir.
 */
+interface Props {
+    groom: string;
+    bride: string;
+}
+
+const { groom, bride } = Astro.props;
 ---
 
 <footer
@@ -36,7 +42,9 @@
             <p class="text-gray-500 uppercase tracking-[0.3em] text-sm">
                 Kami yang berbahagia,
             </p>
-            <h1 class="font-serif text-5xl text-[#333] mb-4">Umar & Nazwa</h1>
+            <h1 class="font-serif text-5xl text-[#333] mb-4">
+                {groom} & {bride}
+            </h1>
             <p class="text-gray-400 text-sm mt-12">
                 © 2026 Leungli Creative Digital Wedding <br />- Made with Love
             </p>

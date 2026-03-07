@@ -9,10 +9,17 @@
 // [!] GANTI EFEK DI SINI: 'door', 'slide-up', 'fade', 'fade-blur'
 const OPENING_EFFECT = "slide-up";
 
-// 1. DATA PENGANTIN (Untuk teks di modal)
+// 1. DATA PENGANTIN (Diterima dari props index.astro)
+interface Props {
+    groom: string;
+    bride: string;
+}
+
+const { groom, bride } = Astro.props;
+
 const GATE_DATA = {
-    groom: "Umar",
-    bride: "Nazwa",
+    groom: groom || "Umar",
+    bride: bride || "Nazwa",
     gateBg: "/assets/bg-hero.jpg",
 };
 
