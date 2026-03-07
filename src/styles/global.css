@@ -22,17 +22,8 @@
 
 html {
   scroll-behavior: smooth;
-  scrollbar-width: none;
-  /* Firefox */
-  -ms-overflow-style: none;
-  /* IE and Edge */
+  scrollbar-width: thin;
   overflow-x: hidden;
-  scroll-padding-top: 2rem;
-}
-
-html::-webkit-scrollbar {
-  display: none;
-  /* Chrome, Safari and Opera */
 }
 
 body {
@@ -44,10 +35,6 @@ body {
   width: 100%;
   position: relative;
   overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 h1,
@@ -85,17 +72,4 @@ h3,
 .animate-fade-in {
   animation: fadeInUp 1s ease-out forwards;
 }
-
-/* --- Scroll Reveal Animation --- */
-/* Gunakan class .reveal pada elemen yang ingin dimunculkan saat scroll */
-.reveal {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: all 0.8s ease-out;
-}
-
-/* Class .active akan ditambahkan lewat JavaScript saat elemen terlihat di layar */
-.reveal.active {
-  opacity: 1;
-  transform: translateY(0);
-}
+

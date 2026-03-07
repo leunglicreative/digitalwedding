@@ -33,10 +33,10 @@ const SHIPPING_ADDRESS = {
 <section id="gift" class="py-20 bg-blush px-4 text-center overflow-hidden">
     <div class="max-w-4xl mx-auto">
         <!-- Judul Bagian -->
-        <h2 class="font-serif text-4xl text-gold mb-6 italic reveal">
+        <h2 class="font-serif text-4xl text-gold mb-6 italic">
             Wedding Gift
         </h2>
-        <p class="text-gray-600 mb-12 max-w-2xl mx-auto reveal">
+        <p class="text-gray-600 mb-12 max-w-2xl mx-auto">
             Doa restu Anda merupakan karunia terindah bagi kami. Namun jika Anda
             ingin memberikan tanda kasih, Anda dapat mengirimkannya melalui:
         </p>
@@ -44,7 +44,7 @@ const SHIPPING_ADDRESS = {
         <div class="grid md:grid-cols-2 gap-8 mb-16">
             <!-- Rekening 1 (BCA) -->
             <div
-                class="bg-white p-8 rounded-2xl shadow-xl border border-gold/10 flex flex-col items-center reveal hover:shadow-2xl transition-all duration-500 group"
+                class="bg-white p-8 rounded-2xl shadow-xl border border-gold/10 flex flex-col items-center hover:shadow-2xl transition-all duration-500 group"
             >
                 <div
                     class="h-12 flex items-center mb-6 group-hover:scale-110 transition-transform duration-500"
@@ -81,7 +81,7 @@ const SHIPPING_ADDRESS = {
 
             <!-- Rekening 2 (Mandiri) -->
             <div
-                class="bg-white p-8 rounded-2xl shadow-xl border border-gold/10 flex flex-col items-center reveal hover:shadow-2xl transition-all duration-500 group"
+                class="bg-white p-8 rounded-2xl shadow-xl border border-gold/10 flex flex-col items-center hover:shadow-2xl transition-all duration-500 group"
             >
                 <div
                     class="h-10 flex items-center mb-6 group-hover:scale-110 transition-transform duration-500"
@@ -122,7 +122,7 @@ const SHIPPING_ADDRESS = {
         <!-- Alamat Pengiriman & Maps -->
         <!-- Optimalisasi layout: Memberikan padding dan border radius pada container Maps -->
         <div
-            class="max-w-2xl mx-auto bg-white rounded-3xl shadow-2xl border border-gold/10 overflow-hidden reveal"
+            class="max-w-2xl mx-auto bg-white rounded-3xl shadow-2xl border border-gold/10 overflow-hidden"
         >
             <div class="p-8 pb-4 text-left">
                 <h3
@@ -230,8 +230,8 @@ const SHIPPING_ADDRESS = {
 
     copyButtons.forEach((btn) => {
         btn.addEventListener("click", async () => {
-            const textToCopy = btn.getAttribute("data-copy");
-            const successMsg = btn.parentElement.querySelector(".copy-success");
+            const textToCopy = btn.getAttribute("data-copy") || "";
+            const successMsg = btn.parentElement?.querySelector(".copy-success");
 
             try {
                 // Gunakan Clipboard API
@@ -242,14 +242,16 @@ const SHIPPING_ADDRESS = {
                 setTimeout(() => btn.classList.remove("btn-animated"), 600);
 
                 // Tampilkan pesan berhasil
-                successMsg.classList.remove("opacity-0", "translate-y-2");
-                successMsg.classList.add("opacity-100", "translate-y-0");
-
-                // Sembunyikan pesan setelah 2 detik
-                setTimeout(() => {
-                    successMsg.classList.add("opacity-0", "translate-y-2");
-                    successMsg.classList.remove("opacity-100", "translate-y-0");
-                }, 2000);
+                if (successMsg) {
+                    successMsg.classList.remove("opacity-0", "translate-y-2");
+                    successMsg.classList.add("opacity-100", "translate-y-0");
+                    
+                    // Sembunyikan pesan setelah 2 detik
+                    setTimeout(() => {
+                        successMsg.classList.add("opacity-0", "translate-y-2");
+                        successMsg.classList.remove("opacity-100", "translate-y-0");
+                    }, 2000);
+                }
             } catch (err) {
                 console.error("Gagal menyalin teks: ", err);
             }

@@ -1,644 +1,150 @@
 ---
 /* 
-   MODIFIKASI HERO SECTION:
-   - Ganti gambar latar belakang pada modal di bagian style atau utility class.
-   - Edit nama pasangan di bawah ini.
-   - Untuk mengganti efek pembukaan, cari variabel 'EF_TYPE' di bagian <script>.
+   -----------------------------------------------------------
+   HERO SECTION (MAIN CONTENT)
+   -----------------------------------------------------------
+   - Menampilkan Nama Pengantin Utama.
+   - Countdwon Waktu.
+   - Reveal Animation setelah undangan dibuka.
 */
+
+const HERO_DATA = {
+    groom: "Umar",
+    bride: "Nazwa",
+    date: "2026-03-12T08:00:00",
+    mainHeroBg:
+        "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2070&auto=format&fit=crop",
+};
 ---
 
-<!-- Background Music / Musik Latar --><!-- CARA MENGGANTI MUSIK: Ganti path di src="..." dengan file musik Anda sendiri --><!-- preload="none" membantu mencegah download manager (seperti IDM) langsung mendownload file saat page load -->
-<audio id="bg-music" loop preload="none">
-    <source src="/sound/janjisuci.mp3" type="audio/mpeg" />
-    Your browser does not support the audio element.
-</audio>
-
-<!-- Modal Undangan (Gate) -->
-<!-- Ganti Ukuran Modal
-  Bawaan
-  "fixed inset-0 z-100 flex items-center justify-center overflow-hidden"
-  Fiksasi
-  "fixed inset-0 z-100 flex items-center justify-center overflow-hidden px-6"
-   -->
-<div
-    id="invitation-modal"
-    class="fixed inset-0 z-100 flex items-center justify-center overflow-hidden px-12"
-    style="backface-visibility: hidden; transform: translateZ(0); will-change: transform, opacity;"
->
-    <!-- Efek Panel (Untuk Door/Curtain) -->
-    <!-- Panel ini akan menggunakan gambar yang sama dengan background agar transisi terlihat 'sobek' atau 'terbelah' -->
-    <div
-        id="panel-left"
-        class="absolute inset-y-0 left-0 w-1/2 bg-cover bg-no-repeat transition-transform duration-1000 ease-in-out z-[-1] border-r border-gold/0"
-        style="will-change: transform;"
-    >
-    </div>
-    <div
-        id="panel-right"
-        class="absolute inset-y-0 right-0 w-1/2 bg-cover bg-no-repeat transition-transform duration-1000 ease-in-out z-[-1] border-l border-gold/0"
-        style="will-change: transform;"
-    >
-    </div>
-
-    <!-- Background Utama Gate (Untuk efek Fade/Blur/Zoom) -->
-    <!-- ID: modal-bg - Bagian ini mengontrol latar belakang SEBELUM undangan dibuka -->
-    <div
-        id="modal-bg"
-        class="absolute inset-0 bg-cover bg-center brightness-100 transition-all duration-1000 z-[-2]"
-    >
-    </div>
-
-    <!-- Wadah Kelopak Bunga (Petals) -->
-    <div
-        id="petals-container"
-        class="absolute inset-0 pointer-events-none z-10 overflow-hidden hidden"
-    >
-    </div>
-
-    <!-- Konten Modal -->
-    <div
-        id="modal-content"
-        class="text-center p-8 max-w-lg w-full transition-all duration-1000 relative z-20"
-    >
-        <h2
-            class="font-serif text-3xl md:text-4xl text-gold mb-4 italic animate-fade-in"
-        >
-            The Wedding of
-        </h2>
-        <h1
-            class="font-serif text-5xl md:text-7xl mb-8 tracking-widest text-[#333] animate-fade-in"
-        >
-            Umar <br /> & <br /> Eliza
-        </h1>
-        <p class="mb-8 text-gray-600 tracking-wider animate-fade-in">
-            Kepada Bapak/Ibu/Saudara/i,
-        </p>
-        <div class="mb-12 animate-fade-in">
-            <span class="block text-xl font-serif italic text-gold"
-                >Kami Mengundang Anda</span
-            >
-        </div>
-        <button
-            id="open-invitation"
-            class="cursor-pointer bg-gold text-white px-8 py-3 rounded-full font-semibold hover:bg-[#b8952d] transition-transform hover:scale-105 active:scale-95 shadow-lg uppercase tracking-widest text-sm"
-        >
-            Buka Undangan
-        </button>
-    </div>
-</div>
-
-<!-- Main Hero Content (Latar Belakang & Isi Terbuka) -->
 <section
-    id="hero-section"
-    class="relative min-h-screen flex items-center justify-center text-center px-4 overflow-hidden"
-    style="contain: paint;"
+    id="hero-main"
+    class="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#111]"
 >
-    <!-- ID: hero-section-bg - Bagian ini mengontrol latar belakang SETELAH undangan dibuka -->
+    <!-- Latar Belakang Hero Utama -->
     <div
-        id="hero-section-bg"
-        class="absolute inset-0 bg-cover bg-center brightness-75 transition-transform duration-1000 ease-out z-0"
+        id="main-bg"
+        class="absolute inset-0 bg-cover bg-center brightness-50 scale-110 transition-all duration-[2.5s]"
+        style={`background-image: url('${HERO_DATA.mainHeroBg}')`}
     >
     </div>
 
-    <!-- Main Hero Content (Teks Utama setelah terbuka) -->
+    <!-- Detail Konten Hero -->
     <div
         id="hero-content"
-        class="relative z-10 flex flex-col items-center justify-center py-20 text-center px-4 transition-opacity duration-1000 opacity-0"
+        class="relative z-10 text-center text-white opacity-0 translate-y-12 transition-all duration-1000"
     >
-        <span
-            class="text-gold font-accent text-lg md:text-2xl mb-2 tracking-widest uppercase"
-            >The Wedding of</span
+        <span class="text-gold uppercase tracking-[0.4em] text-sm block mb-4"
+            >You are Invited to the Wedding of</span
         >
         <h1
-            class="text-4xl md:text-6xl lg:text-8xl font-serif text-white mb-4 drop-shadow-lg"
+            class="text-5xl md:text-8xl font-serif mb-6 drop-shadow-xl text-white"
         >
-            Umar & <br class="md:hidden" /> Eliza
+            {HERO_DATA.groom} & {HERO_DATA.bride}
         </h1>
-        <p
-            class="text-white/80 font-accent text-sm md:text-lg max-w-2xl px-4 text-balance mb-6"
-        >
-            Kami mengundang Anda untuk merayakan hari kebahagiaan kami
+        <p class="max-w-xl mx-auto text-white/80 italic mb-12 px-6">
+            "Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan
+            pasangan-pasangan untukmu dari jenismu sendiri..."
         </p>
 
-        <!-- Countdown Kompak (Kecil & Tidak Mengganggu) -->
-        <div id="hero-countdown" class="flex gap-3 animate-fade-in mt-2">
-            <div class="countdown-item">
-                <span id="hero-days" class="number">00</span>
-                <span class="label">Hari</span>
+        <!-- COUNTDOWN -->
+        <div class="flex justify-center gap-6 md:gap-10" id="hero-countdown">
+            <div class="text-center group">
+                <span
+                    id="d-val"
+                    class="text-4xl md:text-6xl font-serif block text-white group-hover:text-gold transition-colors"
+                    >00</span
+                >
+                <span class="text-[10px] uppercase tracking-widest text-gold/80"
+                    >Hari</span
+                >
             </div>
-            <div class="countdown-item">
-                <span id="hero-hours" class="number">00</span>
-                <span class="label">Jam</span>
+            <div class="text-center group">
+                <span
+                    id="h-val"
+                    class="text-4xl md:text-6xl font-serif block text-white group-hover:text-gold transition-colors"
+                    >00</span
+                >
+                <span class="text-[10px] uppercase tracking-widest text-gold/80"
+                    >Jam</span
+                >
             </div>
-            <div class="countdown-item">
-                <span id="hero-minutes" class="number">00</span>
-                <span class="label">Menit</span>
+            <div class="text-center group">
+                <span
+                    id="m-val"
+                    class="text-4xl md:text-6xl font-serif block text-white group-hover:text-gold transition-colors"
+                    >00</span
+                >
+                <span class="text-[10px] uppercase tracking-widest text-gold/80"
+                    >Menit</span
+                >
             </div>
-            <div class="countdown-item">
-                <span id="hero-seconds" class="number">00</span>
-                <span class="label">Detik</span>
+            <div class="text-center group">
+                <span
+                    id="s-val"
+                    class="text-4xl md:text-6xl font-serif block text-white group-hover:text-gold transition-colors"
+                    >00</span
+                >
+                <span class="text-[10px] uppercase tracking-widest text-gold/80"
+                    >Detik</span
+                >
             </div>
         </div>
     </div>
 </section>
 
-<script>
-    /**
-     * ==========================================
-     * KONFIGURASI GAMBAR & EFEK (MUDAH DIUBAH)
-     * ==========================================
-     */
-
-    // 1. GAMBAR LATAR BELAKANG SEBELUM DIBUKA (GATE/MODAL)
-    // Silakan ganti path /assets/bg-hero.png dengan gambar Anda di folder public/assets/
-    const GATE_BG_IMAGE = "/assets/bg-hero.jpg";
-
-    // 2. GAMBAR LATAR BELAKANG UTAMA (HERO SECTION SETELAH DIBUKA)
-    // Silakan ganti URL Unsplash di bawah ini dengan gambar Anda sendiri (lokal atau URL)
-    const HERO_MAIN_IMAGE =
-        "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2070&auto=format&fit=crop";
-
-    // 3. PILIH EFEK PEMBUKAAN:
-    /**
-     * 'door'          : Pintu terbuka ke samping (kiri & kanan)
-     * 'curtain'       : Tirai terangkat ke atas
-     * 'fade-zoom'     : Efek hilang dengan zoom mengecil
-     * 'fade-zoom-out' : Efek hilang dengan zoom membesar
-     * 'fade-blur'     : Efek hilang dengan blur halus
-     * 'circle'        : Reveal dengan bentuk lingkaran dari tengah
-     * 'petals'        : Transisi standar disertai hujan kelopak bunga
-     */
-    type EffectType =
-        | "door"
-        | "curtain"
-        | "fade-zoom"
-        | "fade-zoom-out"
-        | "fade-blur"
-        | "circle"
-        | "petals"
-        | "slide-up";
-    const EF_TYPE = "slide-up" as EffectType;
-
-    /**
-     * ==========================================
-     * FITUR ON/OFF (TOGGLES)
-     * ==========================================
-     */
-
-    // --- KONFIGURASI FITUR (ON/OFF) ---
-    // true  = Aktif (ON)
-    // false = Mati (OFF)
-
-    // A. AKTIFKAN MUSIK?
-    // Ganti ke 'false' jika ingin menghapus/mematikan fitur musik sepenuhnya.
-    const IS_MUSIC_ENABLED = true;
-
-    // B. AKTIFKAN EFEK ANIMASI PEMBUKAAN?
-    // Ganti ke 'false' jika ingin mematikan semua efek animasi (langsung hilang).
-    const IS_ANIMATION_ENABLED = true;
-
-    // C. KUNCI SCROLL SEBELUM DIBUKA?
-    // true  = Halaman tidak bisa di-scroll sebelum tombol diklik (direkomendasikan).
-    // false = Halaman bisa di-scroll bebas sejak awal.
-    const IS_SCROLL_LOCKED = true;
-
-    /**
-     * ==========================================
-     * CONFIGURASI CONTAINER KONTEN (GLASSMORPHISM)
-     * UNTUK MODAL SEBELUM MASUK HERO
-     * ==========================================
-     */
-
-    // 1. PILIH BENTUK CONTAINER:
-    /**
-     * 'square'   : Kotak tajam
-     * 'rounded'  : Kotak tumpul (elegan)
-     * 'circle'   : Bulat sempurna
-     * 'house'    : Bentuk pintu/kubah (arch)
-     * 'triangle' : Bentuk segitiga
-     */
-    type ContainerShape =
-        | "square"
-        | "rounded"
-        | "circle"
-        | "house"
-        | "triangle";
-    const CONTAINER_SHAPE: ContainerShape = "rounded"; // <--- GANTI BENTUK DI SINI
-
-    // 2. SETTING TAMPILAN CONTAINER:
-    const CONTAINER_CONFIG = {
-        blur: "blur(10px)", // Intensitas blur (misal: blur(5px), blur(20px))
-        opacity: "rgba(255, 255, 255, 0.4)", // Warna & transparansi background (Putih transparan)
-        border: "1px solid rgba(255, 255, 255, 0.3)", // Garis tepi container
-        vPadding: "3rem", // Jarak atas-bawah dalam container
-        hPadding: "2rem", // Jarak kiri-kanan dalam container
-    };
-
-    // ==========================================
-    // LOGIKA SISTEM (JANGAN DIUBAH KECUALI PERLU)
-    // ==========================================
-
-    // --- INISIALISASI ELEMEN ---
-    const modal = document.getElementById("invitation-modal");
-    const modalContent = document.getElementById(
-        "modal-content",
-    ) as HTMLElement;
-    const modalBg = document.getElementById("modal-bg") as HTMLElement;
-    const panelLeft = document.getElementById("panel-left") as HTMLElement;
-    const panelRight = document.getElementById("panel-right") as HTMLElement;
-    const openBtn = document.getElementById("open-invitation");
-    const heroContent = document.getElementById("hero-content");
-    const heroSectionBg = document.getElementById(
-        "hero-section-bg",
-    ) as HTMLElement;
-    const music = document.getElementById("bg-music") as HTMLAudioElement;
-    const petalsContainer = document.getElementById("petals-container");
-
-    /**
-     * ==========================================
-     * LOGIKA COUNTDOWN HERO
-     * ==========================================
-     */
-    const TARGET_DATE = new Date("2026-12-12T08:00:00").getTime();
-
-    function updateHeroCountdown() {
-        const now = new Date().getTime();
-        const distance = TARGET_DATE - now;
-
-        if (distance < 0) return;
-
-        const d = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const h = Math.floor(
-            (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
-        );
-        const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const s = Math.floor((distance % (1000 * 60)) / 1000);
-
-        const dEl = document.getElementById("hero-days");
-        const hEl = document.getElementById("hero-hours");
-        const mEl = document.getElementById("hero-minutes");
-        const sEl = document.getElementById("hero-seconds");
-
-        if (dEl) dEl.innerText = d.toString().padStart(2, "0");
-        if (hEl) hEl.innerText = h.toString().padStart(2, "0");
-        if (mEl) mEl.innerText = m.toString().padStart(2, "0");
-        if (sEl) sEl.innerText = s.toString().padStart(2, "0");
-    }
-
-    setInterval(updateHeroCountdown, 1000);
-    updateHeroCountdown();
-
-    // --- LOGIKA SCROLL LOCK INITIAL ---
-    // Cek apakah undangan sudah pernah dibuka dalam sesi ini menggunakan sessionStorage.
-    const isOpened = sessionStorage.getItem("invitation_opened") === "true";
-
-    if (isOpened) {
-        // Jika sudah dibuka sebelumnya, langsung sembunyikan modal tanpa animasi
-        if (modal) modal.style.display = "none";
-        if (heroContent) heroContent.classList.remove("opacity-0");
-
-        // Beritahu index.astro untuk membuka kunci scroll
-        document.dispatchEvent(new CustomEvent("open-invitation"));
-    }
-
-    // --- APPLY STYLES TO CONTAINER ---
-    if (modalContent) {
-        // Terapkan Glassmorphism
-        modalContent.style.backdropFilter = CONTAINER_CONFIG.blur;
-        // Gunakan bracket notation untuk menghindari error TS pada webkit property
-        (modalContent.style as any).webkitBackdropFilter =
-            CONTAINER_CONFIG.blur;
-        modalContent.style.backgroundColor = CONTAINER_CONFIG.opacity;
-        modalContent.style.border = CONTAINER_CONFIG.border;
-        modalContent.style.padding = `${CONTAINER_CONFIG.vPadding} ${CONTAINER_CONFIG.hPadding}`;
-
-        // Atur agar shadow tidak tertumpuk
-        modalContent.style.boxShadow = "0 8px 32px 0 rgba(0, 0, 0, 0.1)";
-
-        // Terapkan Bentuk (Shape)
-        // Gunakan casting 'as string' untuk menghindari error pengecekan tipe strict TS
-        switch (CONTAINER_SHAPE as string) {
-            case "square":
-                modalContent.style.borderRadius = "0";
-                break;
-            case "rounded":
-                modalContent.style.borderRadius = "2rem";
-                break;
-            case "circle":
-                modalContent.style.borderRadius = "50%";
-                modalContent.style.aspectRatio = "1 / 1";
-                modalContent.style.display = "flex";
-                modalContent.style.flexDirection = "column";
-                modalContent.style.justifyContent = "center";
-                break;
-            case "house":
-                modalContent.style.borderRadius = "20rem 20rem 2rem 2rem";
-                break;
-            case "triangle":
-                modalContent.style.clipPath =
-                    "polygon(50% 0%, 0% 100%, 100% 100%)";
-                modalContent.style.paddingTop = "6rem"; // Beri ruang extra di atas untuk segitiga
-                break;
-        }
-    }
-
-    // Terapkan Gambar Latar Belakang secara dinamis sesuai efek
-    if (heroSectionBg)
-        heroSectionBg.style.backgroundImage = `url('${HERO_MAIN_IMAGE}')`;
-
-    // Optimasi: Hanya gunakan satu layer background agar tidak "double"
-    const isPanelEffect = EF_TYPE === "door" || EF_TYPE === "curtain";
-
-    if (isPanelEffect) {
-        // Jika efek 'door' atau 'curtain', gunakan panel sebagai background
-        if (modalBg) modalBg.style.display = "none"; // Sembunyikan layer background belakang
-
-        if (panelLeft) {
-            panelLeft.style.backgroundImage = `url('${GATE_BG_IMAGE}')`;
-            if (EF_TYPE === "door") {
-                panelLeft.style.backgroundSize = "200% 100%";
-                panelLeft.style.backgroundPosition = "left";
-            } else {
-                // Curtain mode: panel kiri akan melebar menutupi semua
-                panelLeft.style.width = "100%";
-                panelLeft.style.backgroundSize = "cover";
-                panelLeft.style.backgroundPosition = "center";
-            }
-        }
-        if (panelRight) {
-            if (EF_TYPE === "door") {
-                panelRight.style.backgroundImage = `url('${GATE_BG_IMAGE}')`;
-                panelRight.style.backgroundSize = "200% 100%";
-                panelRight.style.backgroundPosition = "right";
-            } else {
-                panelRight.style.display = "none";
-            }
-        }
-    } else {
-        // Jika efek fade/circle, gunakan layer modal-bg tunggal
-        if (modalBg) {
-            modalBg.style.backgroundImage = `url('${GATE_BG_IMAGE}')`;
-            modalBg.style.display = "block";
-        }
-        if (panelLeft) panelLeft.style.display = "none";
-        if (panelRight) panelRight.style.display = "none";
-    }
-
-    // Fungsi untuk membuat kelopak bunga jatuh secara dinamis
-    function createPetal() {
-        if (!petalsContainer) return;
-        const petal = document.createElement("div");
-        petal.className = "petal";
-        petal.style.left = Math.random() * 100 + "vw";
-        petal.style.animationDuration = Math.random() * 3 + 3 + "s";
-        petal.style.opacity = (Math.random() * 0.6 + 0.2).toString();
-        const size = Math.random() * 10 + 10 + "px";
-        petal.style.width = size;
-        petal.style.height = size;
-        petalsContainer.appendChild(petal);
-        setTimeout(() => petal.remove(), 6000);
-    }
-
-    // Hanya jalankan kelopak jika animasi aktif dan tipe terpilih
-    if (IS_ANIMATION_ENABLED && EF_TYPE === "petals") {
-        petalsContainer?.classList.remove("hidden");
-        setInterval(createPetal, 200);
-    }
-
-    openBtn?.addEventListener("click", () => {
-        // 1. KONTROL MUSIK & SET SESSION
-        // Tandai bahwa undangan telah dibuka agar tidak muncul lagi saat refresh
-        sessionStorage.setItem("invitation_opened", "true");
-
-        if (IS_MUSIC_ENABLED && music) {
-            // Optimasi audio: pastikan source tidak di-download sebagai file mentah
-            // Browser akan memperlakukan ini sebagai stream media
-            music.play().catch((e) => {
-                console.log(
-                    "Musik gagal diputar (Mungkin diblokir browser):",
-                    e,
-                );
-            });
-        } else if (music) {
-            // Jika musik dimatikan lewat toggle, pastikan berhenti
-            music.pause();
-            music.remove(); // Hapus dari DOM agar tidak me-load data
-        }
-
-        // 2. FADE OUT KONTEN TEKS & LOCK POINTERS
-        modalContent?.classList.add(
-            "opacity-0",
-            "scale-90",
-            "pointer-events-none",
-        );
-        if (modal) {
-            modal.style.pointerEvents = "none";
-            modal.style.zIndex = "1"; // Turunkan z-index agar tidak menghalangi scroll
-        }
-
-        // 3. JALANKAN SINYAL BUKA UNDANGAN (LGSG UNLOCK SCROLL)
-        document.dispatchEvent(new CustomEvent("open-invitation"));
-
-        // 4. JALANKAN ANIMASI BERDASARKAN TOGGLE (TANPA DELAY 200ms)
-        if (!IS_ANIMATION_ENABLED) {
-            if (modal) modal.style.display = "none";
-            heroContent?.classList.remove("opacity-0");
-            return;
-        }
-
-        switch (EF_TYPE) {
-            case "door":
-                if (panelLeft)
-                    panelLeft.style.transform =
-                        "translateX(-100%) translateZ(0)";
-                if (panelRight)
-                    panelRight.style.transform =
-                        "translateX(100%) translateZ(0)";
-                modalBg?.classList.add("opacity-0");
-                break;
-            case "curtain":
-                if (panelLeft) {
-                    panelLeft.style.width = "100%";
-                    panelLeft.style.backgroundSize = "cover";
-                    panelLeft.style.transform =
-                        "translateY(-100%) translateZ(0)";
-                }
-                if (panelRight) panelRight.style.display = "none";
-                modalBg?.classList.add("opacity-0");
-                break;
-            case "fade-zoom":
-                modal?.classList.add("opacity-0", "scale-150");
-                break;
-            case "fade-zoom-out":
-                modal?.classList.add("opacity-0", "scale-50");
-                break;
-            case "fade-blur":
-                modal?.classList.add("opacity-0", "blur-3xl");
-                break;
-            case "circle":
-                if (modal) {
-                    modal.style.clipPath = "circle(0% at 50% 50%)";
-                    modal.style.transition = "clip-path 1.2s ease-in-out";
-                }
-                break;
-            case "petals":
-                modal?.classList.add("opacity-0");
-                break;
-            case "slide-up":
-                if (modal) {
-                    modal.style.transform = "translateY(-110%)"; // Tarik lebih jauh ke atas
-                    modal.style.opacity = "0";
-                }
-                break;
-            default:
-                modal?.classList.add("opacity-0");
-        }
-
-        // Cleanup modal - Lebih agresif
-        setTimeout(() => {
-            if (modal) {
-                modal.style.display = "none";
-                modal.style.visibility = "hidden";
-                modal.style.zIndex = "-1";
-                modal.style.pointerEvents = "none";
-            }
-        }, 800);
-
-        // Reveal Hero Content
-        if (heroContent) {
-            heroContent.classList.remove("opacity-0");
-            heroContent.classList.add("animate-reveal");
-        }
-    });
-</script>
-
 <style>
-    /* Styling Dasar Overlay Hero */
-    #hero-section::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(
-            to bottom,
-            rgba(0, 0, 0, 0.3),
-            rgba(0, 0, 0, 0.6)
-        );
-        z-index: 1; /* Pastikan di atas background tapi di bawah content */
-    }
-
-    /* Definisi Warna Gold */
     .text-gold {
         color: #d4af37;
     }
-    .bg-gold {
-        background-color: #d4af37;
-    }
-
-    /* Animasi Kelopak Bunga */
-    .petal {
-        position: absolute;
-        top: -10%;
-        width: 15px;
-        height: 15px;
-        background: #ffd1dc;
-        border-radius: 150% 0 150% 0;
-        animation: fall linear infinite;
-    }
-
-    @keyframes fall {
-        0% {
-            transform: translateY(0) rotate(0deg);
-        }
-        100% {
-            transform: translateY(110vh) rotate(360deg);
-        }
-    }
-
-    /* Animasi Tambahan */
-    .animate-fade-in {
-        animation: fadeIn 1s ease-out forwards;
-    }
-
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    /* Efek Reveal untuk Hero Content */
-    .animate-reveal {
-        animation: revealEffect 1.5s ease-out forwards;
-    }
-
-    @keyframes revealEffect {
-        from {
-            opacity: 0;
-            transform: scale(0.95); /* Zoom diperhalus */
-        }
-        to {
-            opacity: 1;
-            transform: scale(1);
-        }
-    }
-
-    #invitation-modal {
-        transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    /* Styling Countdown Kompak di Hero */
-    .countdown-item {
-        background: rgba(255, 255, 255, 0.15);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        padding: 0.5rem 0.8rem;
-        border-radius: 0.75rem;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        min-width: 60px;
-    }
-
-    .countdown-item .number {
-        color: white;
-        font-weight: 700;
-        font-size: 1.25rem;
-        line-height: 1;
-    }
-
-    .countdown-item .label {
-        color: rgba(255, 255, 255, 0.8);
-        font-size: 0.65rem;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        margin-top: 2px;
-    }
-
-    /* Perbaikan Background pada Mobile (Ultra Responsive) */
-    @media (max-width: 768px) {
-        #hero-section {
-            min-height: 100svh; /* Small viewvh untuk browser mobile */
-            height: 100dvh; /* Dynamic height untuk menyesuaikan UI browser */
-        }
-        #hero-section-bg {
-            position: absolute;
-            inset: 0;
-            height: 100%;
-            width: 100%;
-            object-fit: cover;
-            z-index: 0; /* Ubah ke 0 agar tetap terlihat namun di belakang content (z-10) */
-        }
-        .countdown-item {
-            min-width: 50px;
-            padding: 0.4rem 0.6rem;
-        }
-        .countdown-item .number {
-            font-size: 1rem;
-        }
-    }
 </style>
+
+<script define:vars={{ HERO_DATA }}>
+    const mainContent = document.getElementById("hero-content");
+    const mainBg = document.getElementById("main-bg");
+
+    // Reveal Logic
+    function revealHero(instantly = false) {
+        if (instantly) {
+            mainContent.style.transition = "none";
+            mainBg.style.transition = "none";
+        }
+        mainContent.classList.remove("opacity-0", "translate-y-12");
+        mainBg.style.transform = "scale(1)";
+    }
+
+    // Cek di awal
+    if (sessionStorage.getItem("invitation_status") === "opened") {
+        revealHero(true);
+    }
+
+    // Tunggu event dari InvitationGate
+    window.addEventListener("invitationOpened", () => {
+        setTimeout(() => revealHero(false), 500);
+    });
+
+    // Countdown Logic
+    const targetTime = new Date(HERO_DATA.date).getTime();
+    const updateTime = () => {
+        const diff = targetTime - new Date().getTime();
+        if (diff <= 0) return;
+
+        const d = Math.floor(diff / 86400000);
+        const h = Math.floor((diff % 86400000) / 3600000);
+        const m = Math.floor((diff % 3600000) / 60000);
+        const s = Math.floor((diff % 60000) / 1000);
+
+        const setVal = (id, val) => {
+            const el = document.getElementById(id);
+            if (el) el.innerText = val.toString().padStart(2, "0");
+        };
+
+        setVal("d-val", d);
+        setVal("h-val", h);
+        setVal("m-val", m);
+        setVal("s-val", s);
+    };
+
+    setInterval(updateTime, 1000);
+    updateTime();
+</script>

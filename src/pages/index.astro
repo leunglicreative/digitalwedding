@@ -2,6 +2,7 @@
 import "../styles/global.css";
 // Component Imports
 import Hero from "../components/Hero.astro";
+import InvitationGate from "../components/InvitationGate.astro";
 import Quote from "../components/Quote.astro";
 import Couple from "../components/Couple.astro";
 import Story from "../components/Story.astro";
@@ -13,33 +14,6 @@ import Wish from "../components/Wish.astro";
 import WeddingGift from "../components/WeddingGift.astro";
 import Closing from "../components/Closing.astro";
 import FloatingNav from "../components/FloatingNav.astro"; // Navigasi melayang (Musik & Tombol Atas)
-
-// --- KONFIGURASI ANIMASI PER SECTION ---
-// ENABLE_ANIMATION_GLOBAL: Tombol utama untuk mengaktifkan/menonaktifkan semua efek animasi muncul (scroll reveal).
-const ENABLE_ANIMATION_GLOBAL = true; // true = Aktif, false = Nonaktif
-
-/**
- * SECTION_ANIMATIONS: Tentukan jenis animasi untuk setiap bagian secara spesifik.
- * Pilihan Efek:
- * - 'fade-up'    : Muncul dari bawah
- * - 'fade-down'  : Muncul dari atas
- * - 'fade-left'  : Muncul dari kiri
- * - 'fade-right' : Muncul dari kanan
- * - 'zoom-in'    : Membesar dari tengah
- * - 'zoom-out'   : Mengecil dari luar
- * - 'flip-up'    : Terbalik dari bawah
- */
-const SECTION_ANIMATIONS = {
-	quote: "fade-up",
-	couple: "zoom-in",
-	story: "fade-right",
-	gallery: "fade-up",
-	event: "fade-up",
-	rsvp: "fade-up",
-	wish: "fade-up",
-	gift: "fade-up",
-	closing: "fade-up",
-};
 
 // --- KONFIGURASI VISIBILITAS SECTION ---
 // Ubah ke 'false' jika ingin menyembunyikan section tertentu tanpa menghapus kode.
@@ -67,12 +41,6 @@ const SECTION_VISIBILITY = {
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
-		{
-			/* CARA MENGGANTI JUDUL BROWSER: Ganti teks di dalam tag <title> di bawah ini */
-		}
-		<title>The Wedding of Umar & Eliza</title>
-		<link rel="preconnect" href="https://fonts.googleapis.com" />
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link
 			href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
 			rel="stylesheet"
@@ -80,220 +48,18 @@ const SECTION_VISIBILITY = {
 	</head>
 
 	<body class="overflow-x-hidden">
-		{
-			/* Hero section tidak menggunakan efek reveal scroll (sudah ada animasi pembuka) */
-		}
+		<InvitationGate />
 		<Hero />
-
-		{
-			/* Bungkus setiap section dengan class 'reveal' dan tipe animasi yang dipilih jika fitur diaktifkan */
-			/* Gunakan SECTION_VISIBILITY untuk menentukan apakah section harus muncul atau tidak */
-		}
-
-		{
-			SECTION_VISIBILITY.quote && (
-				<div
-					class={
-						ENABLE_ANIMATION_GLOBAL
-							? `reveal ${SECTION_ANIMATIONS.quote}`
-							: ""
-					}
-				>
-					<Quote />
-				</div>
-			)
-		}
-
-		{
-			SECTION_VISIBILITY.couple && (
-				<div
-					class={
-						ENABLE_ANIMATION_GLOBAL
-							? `reveal ${SECTION_ANIMATIONS.couple}`
-							: ""
-					}
-				>
-					<Couple />
-				</div>
-			)
-		}
-
-		{
-			SECTION_VISIBILITY.story && (
-				<div
-					class={
-						ENABLE_ANIMATION_GLOBAL
-							? `reveal ${SECTION_ANIMATIONS.story}`
-							: ""
-					}
-				>
-					<Story />
-				</div>
-			)
-		}
-
-		{
-			SECTION_VISIBILITY.gallery && (
-				<div
-					class={
-						ENABLE_ANIMATION_GLOBAL
-							? `reveal ${SECTION_ANIMATIONS.gallery}`
-							: ""
-					}
-				>
-					<Gallery />
-				</div>
-			)
-		}
-
-		{
-			SECTION_VISIBILITY.event && (
-				<div
-					class={
-						ENABLE_ANIMATION_GLOBAL
-							? `reveal ${SECTION_ANIMATIONS.event}`
-							: ""
-					}
-				>
-					<Event />
-				</div>
-			)
-		}
-
-		{
-			SECTION_VISIBILITY.countdown && (
-				/* REVEAL sekarang ditangani langsung di dalam component Countdown untuk transisi background yang lebih mulus */
-				<Countdown />
-			)
-		}
-
-		{
-			SECTION_VISIBILITY.rsvp && (
-				<div
-					class={
-						ENABLE_ANIMATION_GLOBAL
-							? `reveal ${SECTION_ANIMATIONS.rsvp}`
-							: ""
-					}
-				>
-					<RSVP />
-				</div>
-			)
-		}
-
-		{
-			SECTION_VISIBILITY.wish && (
-				<div
-					class={
-						ENABLE_ANIMATION_GLOBAL
-							? `reveal ${SECTION_ANIMATIONS.wish}`
-							: ""
-					}
-				>
-					<Wish />
-				</div>
-			)
-		}
-
-		{
-			SECTION_VISIBILITY.gift && (
-				<div
-					class={
-						ENABLE_ANIMATION_GLOBAL
-							? `reveal ${SECTION_ANIMATIONS.gift}`
-							: ""
-					}
-				>
-					<WeddingGift />
-				</div>
-			)
-		}
-
-		{
-			SECTION_VISIBILITY.closing && (
-				<div
-					class={
-						ENABLE_ANIMATION_GLOBAL
-							? `reveal ${SECTION_ANIMATIONS.closing}`
-							: ""
-					}
-				>
-					<Closing />
-				</div>
-			)
-		}
-
-		{/* Navigasi Melayang (Tombol Musik & Back to Top) */}
+		{SECTION_VISIBILITY.quote && <Quote />}
+		{SECTION_VISIBILITY.couple && <Couple />}
+		{SECTION_VISIBILITY.story && <Story />}
+		{SECTION_VISIBILITY.gallery && <Gallery />}
+		{SECTION_VISIBILITY.event && <Event />}
+		{SECTION_VISIBILITY.countdown && <Countdown />}
+		{SECTION_VISIBILITY.rsvp && <RSVP />}
+		{SECTION_VISIBILITY.wish && <Wish />}
+		{SECTION_VISIBILITY.gift && <WeddingGift />}
+		{SECTION_VISIBILITY.closing && <Closing />}
 		<FloatingNav />
-
-		<script is:inline define:vars={{ ENABLE_ANIMATION_GLOBAL }}>
-			// --- LOGIKA PENGUNCIAN SCROLL (HARD LOCK) ---
-			function lockScroll() {
-				document.documentElement.style.overflow = "hidden";
-				document.body.style.overflow = "hidden";
-				document.body.style.height = "100%";
-				document.body.style.webkitOverflowScrolling = "auto";
-			}
-
-			function unlockScroll() {
-				document.documentElement.style.overflowX = "hidden";
-				document.body.style.overflowX = "hidden";
-				document.documentElement.style.overflowY = "auto";
-				document.body.style.overflowY = "auto";
-				document.body.style.height = "auto";
-				document.body.style.position = "relative";
-				document.body.style.webkitOverflowScrolling = "touch";
-			}
-
-			// Kunci saat pertama kali load
-			lockScroll();
-
-			// Dengarkan event dari Hero.astro saat undangan dibuka
-			document.addEventListener("open-invitation", () => {
-				unlockScroll();
-			});
-
-			// --- LOGIKA MUNCUL SAAT SCROLL (SCROLL REVEAL OPTIMIZED) ---
-			if (ENABLE_ANIMATION_GLOBAL) {
-				const observerOptions = {
-					threshold: 0.15, // Section akan muncul jika 15% areanya terlihat di layar
-				};
-
-				const observer = new IntersectionObserver((entries) => {
-					entries.forEach((entry) => {
-						if (entry.isIntersecting) {
-							entry.target.classList.add("active");
-							// OPTIMASI: Berhenti mengamati setelah elemen muncul agar tidak membebani performa mobile
-							observer.unobserve(entry.target);
-						}
-					});
-				}, observerOptions);
-
-				// Cari semua elemen dengan class .reveal dan mulai mengamati
-				document.querySelectorAll(".reveal").forEach((el) => {
-					observer.observe(el);
-				});
-			}
-		</script>
 	</body>
 </html>
-
-<style is:global>
-	/* --- SISTEM ANIMASI KOMPLEKS (SCROLL REVEAL OPTIMIZED) --- */
-	.reveal {
-		opacity: 0;
-		transition: transform 0.8s cubic-bezier(0.2, 0, 0.2, 1), opacity 0.8s ease-out;
-		will-change: transform, opacity;
-		backface-visibility: hidden;
-	}
-
-	.reveal.fade-up { transform: translateY(30px); }
-	.reveal.fade-down { transform: translateY(-30px); }
-	.reveal.zoom-in { transform: scale(0.95); }
-	.reveal.zoom-out { transform: scale(1.05); }
-
-	.reveal.active {
-		opacity: 1 !important;
-		transform: none !important;
-	}
-</style>
