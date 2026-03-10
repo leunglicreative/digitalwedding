@@ -155,11 +155,18 @@
                     .select("*")
                     .order("created_at", { ascending: false });
 
-                if (error) throw error;
+                if (error) {
+                    console.error("Supabase Wish Fetch Error Code:", error.code);
+                    console.error("Supabase Wish Fetch Error Message:", error.message);
+                    throw error;
+                }
+                console.log("Supabase Wish Data fetched:", data);
                 return data || [];
             } catch (error) {
                 console.error("Error fetching wishes from Supabase:", error);
-                return [];
+                // Fallback ke localStorage jika Supabase gagal agar tetap ada tampilan
+                const saved = localStorage.getItem("wedding_wishes");
+                return saved ? JSON.parse(saved) : [];
             }
         } else {
             // Mode fallback menggunakan localStorage jika tidak memakai database

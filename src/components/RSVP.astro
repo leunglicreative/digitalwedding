@@ -101,10 +101,7 @@
             </form>
 
             <!-- Pesan Sukses (Hidden by default) -->
-            <div
-                id="rsvp-success"
-                class="hidden text-center py-10"
-            >
+            <div id="rsvp-success" class="hidden text-center py-10">
                 <div
                     class="w-20 h-20 bg-gold/10 text-gold rounded-full flex items-center justify-center mx-auto mb-6"
                 >
@@ -128,13 +125,31 @@
                 <p class="text-gray-600 mb-8">
                     Konfirmasi kehadiran Anda telah kami terima.
                 </p>
-                <!-- KIRIM KONFIRMASI LAINNYA -->
-                <!-- <button
+                <!-- Tombol untuk mereset/mengirim lagi -->
+                <button
                     id="rsvp-reset"
                     class="text-gold font-semibold hover:underline"
                 >
                     Kirim konfirmasi lainnya
-                </button> -->
+                </button>
+            </div>
+        </div>
+
+        <!-- Area Tampilan Daftar RSVP (Dinamis) -->
+        <div class="mt-16 border-t border-gold/10 pt-10">
+            <h3 class="font-serif text-2xl text-gold text-center mb-6 italic">
+                Daftar Kehadiran
+            </h3>
+            <div
+                id="rsvp-list-container"
+                class="grid grid-cols-1 sm:grid-cols-2 gap-4"
+            >
+                <!-- Pesan akan dimunculkan di sini lewat JavaScript -->
+                <div
+                    class="col-span-full text-center py-6 text-gray-400 italic"
+                >
+                    Memuat daftar kehadiran...
+                </div>
             </div>
         </div>
     </div>
@@ -154,8 +169,73 @@
         const form = document.getElementById("rsvp-form") as HTMLFormElement;
         const container = document.getElementById("rsvp-success");
         const resetBtn = document.getElementById("rsvp-reset");
+        const rsvpListContainer = document.getElementById(
+            "rsvp-list-container",
+        );
 
         if (!form || !container) return;
+
+        // Fungsi ambil data RSVP
+        async function getRSVPs() {
+            if (useSupabase) {
+                try {
+                    const { data, error } = await supabase
+                        .from("rsvp")
+                        .select("*")
+                        .order("created_at", { ascending: false });
+
+                    if (error) {
+                        console.error("Supabase Error Code:", error.code);
+                        console.error("Supabase Error Message:", error.message);
+                        throw error;
+                    }
+                    console.log("Supabase RSVP Data fetched:", data);
+                    return data || [];
+                } catch (error) {
+                    console.error("Error fetching RSVPs from Supabase:", error);
+                    return [];
+                }
+            } else {
+                const saved = localStorage.getItem("wedding_rsvp");
+                return saved ? JSON.parse(saved) : [];
+            }
+        }
+
+        // Fungsi render RSVP list
+        async function renderRSVPs() {
+            if (!rsvpListContainer) return;
+            const rsvps = await getRSVPs();
+
+            if (rsvps.length === 0) {
+                rsvpListContainer.innerHTML =
+                    '<div class="col-span-full text-center py-6 text-gray-400 italic">Belum ada konfirmasi kehadiran.</div>';
+                return;
+            }
+
+            rsvpListContainer.innerHTML = rsvps
+                .map((r: any) => {
+                    const name = r.nama || r.name || "Anonim";
+                    const isPresent =
+                        r.kehadiran === true || r.attendance === "hadir";
+                    const guests = r.jumlah_orang || r.guests || 1;
+
+                    return `
+                        <div class="bg-gray-50 p-4 rounded-xl border-l-4 ${isPresent ? "border-green-400" : "border-red-400"} flex items-center justify-between">
+                            <div>
+                                <h4 class="font-bold text-gray-800">${name}</h4>
+                                <p class="text-xs text-gray-500">${isPresent ? "Berencana Hadir" : "Maaf, Tidak Bisa Hadir"}</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="bg-gold/10 text-gold text-xs font-bold px-2 py-1 rounded-full">${guests} Orang</span>
+                            </div>
+                        </div>
+                    `;
+                })
+                .join("");
+        }
+
+        // Jalankan render awal
+        renderRSVPs();
 
         form.addEventListener("submit", async (e) => {
             e.preventDefault();
@@ -187,7 +267,13 @@
                         .from("rsvp")
                         .insert([data]);
 
-                    if (error) throw error;
+                    if (error) {
+                        console.error("Supabase Submission Error:", error);
+                        throw error;
+                    }
+
+                    // Trigger render ulang setelah simpan
+                    renderRSVPs();
                 } else {
                     // Simpan ke LocalStorage (Mock Database) sebagai fallback
                     const existingRsvp = JSON.parse(
@@ -202,6 +288,7 @@
                         "wedding_rsvp",
                         JSON.stringify(existingRsvp),
                     );
+                    renderRSVPs();
                 }
 
                 // 3. Tampilkan Pesan Sukses
@@ -220,7 +307,7 @@
             } catch (error) {
                 console.error("Error submitting RSVP:", error);
                 alert(
-                    "Maaf, terjadi kesalahan saat mengirim konfirmasi. Silakan coba lagi.",
+                    "Maaf, terjadi kesalahan saat mengirim konfirmasi. Silakan coba lagi. Pastikan koneksi internet aktif.",
                 );
 
                 if (submitBtn) {
@@ -246,5 +333,19 @@
                 submitBtn.removeAttribute("disabled");
             }
         });
+
+        // Realtime Supabase untuk RSVP
+        if (useSupabase) {
+            supabase
+                .channel("rsvp-realtime")
+                .on(
+                    "postgres_changes",
+                    { event: "INSERT", schema: "public", table: "rsvp" },
+                    () => {
+                        renderRSVPs();
+                    },
+                )
+                .subscribe();
+        }
     });
 </script>
