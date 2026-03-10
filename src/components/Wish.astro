@@ -217,15 +217,12 @@
         // Render Cards
         container.innerHTML = currentWishes
             .map((w: any) => {
-                // Handle format data yang berbeda antara Supabase dan LocalStorage
-                const name = w.nama || w.name || "Anonim";
-                const message = w.pesan || w.message || "";
-                // Gunakan created_at dari database untuk sinkronisasi waktu nyata
-                const wishDate = w.created_at
-                    ? new Date(w.created_at)
-                    : w.time
-                      ? new Date(w.time)
-                      : new Date(w.id);
+                // Prioritaskan kolom 'nama' dan 'pesan' sesuai database
+                const name = w.nama || "Anonim";
+                const message = w.pesan || "";
+                
+                // Gunakan created_at dari database
+                const wishDate = w.created_at ? new Date(w.created_at) : new Date();
 
                 const formattedTime = wishDate.toLocaleString("id-ID", {
                     day: "numeric",
