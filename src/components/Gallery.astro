@@ -1,9 +1,23 @@
 ---
-/* 
-   MODIFIKASI GALLERY:
-   - Pilih salah satu Opsi (Grid atau Slider) dengan cara menghapus komentar (uncomment) pada bagian yang diinginkan.
-   - Ganti link gambar di bawah ini dengan foto Anda sendiri.
-*/
+interface Props {
+    // // indonesia: Tambahkan prop untuk daftar foto gallery
+    galleryImages?: string[];
+}
+
+const { galleryImages } = Astro.props;
+
+// // indonesia: Foto default jika tidak ada foto yang diberikan
+const DEFAULT_IMAGES = [
+    "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=2069&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2070&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=2070&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=687&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=2070&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1532712938310-34cb3982ef74?q=80&w=2070&auto=format&fit=crop",
+];
+
+const imagesToDisplay =
+    galleryImages && galleryImages.length > 0 ? galleryImages : DEFAULT_IMAGES;
 ---
 
 <section id="gallery" class="py-20 bg-soft-white px-4">
@@ -14,74 +28,21 @@
             Our Memories
         </h2>
 
-        <!-- OPSI 1: 6-IMAGE GRID (Hapus komentar di bawah untuk menggunakan) -->
+        <!-- OPSI 1: 6-IMAGE GRID (Otomatis menyesuaikan jumlah foto) -->
         <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-            <div
-                class="aspect-square overflow-hidden rounded-lg shadow-md border-2 border-gold/10"
-            >
-                <img
-                    src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=2069&auto=format&fit=crop"
-                    alt="Gallery 1"
-                    loading="lazy"
-                    decoding="async"
-                    class="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
-                />
-            </div>
-            <div
-                class="aspect-square overflow-hidden rounded-lg shadow-md border-2 border-gold/10"
-            >
-                <img
-                    src="https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2070&auto=format&fit=crop"
-                    alt="Gallery 2"
-                    loading="lazy"
-                    decoding="async"
-                    class="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
-                />
-            </div>
-            <div
-                class="aspect-square overflow-hidden rounded-lg shadow-md border-2 border-gold/10"
-            >
-                <img
-                    src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=2070&auto=format&fit=crop"
-                    alt="Gallery 3"
-                    loading="lazy"
-                    decoding="async"
-                    class="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
-                />
-            </div>
-            <div
-                class="aspect-square overflow-hidden rounded-lg shadow-md border-2 border-gold/10"
-            >
-                <img
-                    src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=687&auto=format&fit=crop"
-                    alt="Gallery 4"
-                    loading="lazy"
-                    decoding="async"
-                    class="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
-                />
-            </div>
-            <div
-                class="aspect-square overflow-hidden rounded-lg shadow-md border-2 border-gold/10"
-            >
-                <img
-                    src="https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=2070&auto=format&fit=crop"
-                    alt="Gallery 5"
-                    loading="lazy"
-                    decoding="async"
-                    class="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
-                />
-            </div>
-            <div
-                class="aspect-square overflow-hidden rounded-lg shadow-md border-2 border-gold/10"
-            >
-                <img
-                    src="https://images.unsplash.com/photo-1532712938310-34cb3982ef74?q=80&w=2070&auto=format&fit=crop"
-                    alt="Gallery 6"
-                    loading="lazy"
-                    decoding="async"
-                    class="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
-                />
-            </div>
+            {
+                imagesToDisplay.map((img, index) => (
+                    <div class="aspect-square overflow-hidden rounded-lg shadow-md border-2 border-gold/10">
+                        <img
+                            src={img}
+                            alt={`Gallery ${index + 1}`}
+                            loading="lazy"
+                            decoding="async"
+                            class="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+                        />
+                    </div>
+                ))
+            }
         </div>
 
         <!-- OPSI 2: 6-IMAGE SWIPE SLIDER (Saat ini disembunyikan/comment out) -->

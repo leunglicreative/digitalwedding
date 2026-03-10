@@ -1,26 +1,28 @@
 ---
-/* 
-   -----------------------------------------------------------
-   HERO SECTION (MAIN CONTENT)
-   -----------------------------------------------------------
-   - Menampilkan Nama Pengantin Utama.
-   - Countdwon Waktu.
-   - Reveal Animation setelah undangan dibuka.
-*/
+// /*
+//    -----------------------------------------------------------
+//    HERO SECTION (MAIN CONTENT)
+//    -----------------------------------------------------------
+//    - Menampilkan Nama Pengantin Utama.
+//    - Countdwon Waktu.
+//    - Reveal Animation setelah undangan dibuka.
+// */
 
 interface Props {
     groom: { name: string };
     bride: { name: string };
+    // // indonesia: Tambahkan prop untuk background hero
+    heroBackground?: string;
 }
 
-const { groom, bride } = Astro.props;
+const { groom, bride, heroBackground } = Astro.props;
 
 const HERO_DATA = {
     groom: groom.name || "",
     bride: bride.name || "",
-    date: "2026-03-12T08:00:00",
-    mainHeroBg:
-        "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2070&auto=format&fit=crop",
+    date: "2026-08-23T08:00:00",
+    // // indonesia: Gunakan foto dari props jika ada, jika tidak gunakan default
+    mainHeroBg: heroBackground || "",
 };
 ---
 
