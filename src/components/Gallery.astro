@@ -1,10 +1,21 @@
 ---
 interface Props {
-    // // indonesia: Tambahkan prop untuk daftar foto gallery
-    galleryImages?: string[];
+    // // indonesia: Tambahkan prop untuk daftar foto khusus Grid (kotak-kotak)
+    galleryGridImages?: string[];
+    // // indonesia: Tambahkan prop untuk daftar foto khusus Slider (geser)
+    gallerySliderImages?: string[];
+    // // indonesia: Aktifkan atau nonaktifkan layout Grid (kotak-kotak)
+    showGalleryGrid?: boolean;
+    // // indonesia: Aktifkan atau nonaktifkan layout Slider (geser menyamping)
+    showGallerySlider?: boolean;
 }
 
-const { galleryImages } = Astro.props;
+const {
+    galleryGridImages,
+    gallerySliderImages,
+    showGalleryGrid = true,
+    showGallerySlider = false,
+} = Astro.props;
 
 // // indonesia: Foto default jika tidak ada foto yang diberikan
 const DEFAULT_IMAGES = [
@@ -16,8 +27,15 @@ const DEFAULT_IMAGES = [
     "https://images.unsplash.com/photo-1532712938310-34cb3982ef74?q=80&w=2070&auto=format&fit=crop",
 ];
 
-const imagesToDisplay =
-    galleryImages && galleryImages.length > 0 ? galleryImages : DEFAULT_IMAGES;
+const gridImages =
+    galleryGridImages && galleryGridImages.length > 0
+        ? galleryGridImages
+        : DEFAULT_IMAGES;
+
+const sliderImages =
+    gallerySliderImages && gallerySliderImages.length > 0
+        ? gallerySliderImages
+        : DEFAULT_IMAGES;
 ---
 
 <section id="gallery" class="py-20 bg-soft-white px-4">
@@ -25,83 +43,49 @@ const imagesToDisplay =
         <h2
             class="font-serif text-4xl md:text-5xl text-gold text-center mb-16 italic"
         >
-            Our Memories
+            Galeri Foto
         </h2>
 
-        <!-- OPSI 1: 6-IMAGE GRID (Otomatis menyesuaikan jumlah foto) -->
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {
-                imagesToDisplay.map((img, index) => (
-                    <div class="aspect-square overflow-hidden rounded-lg shadow-md border-2 border-gold/10">
-                        <img
-                            src={img}
-                            alt={`Gallery ${index + 1}`}
-                            loading="lazy"
-                            decoding="async"
-                            class="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
-                        />
+        {
+            showGalleryGrid && (
+                /* OPSI 1: 6-IMAGE GRID (Otomatis menyesuaikan jumlah foto) */
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-12">
+                    {gridImages.map((img, index) => (
+                        <div class="aspect-square overflow-hidden rounded-lg shadow-md border-2 border-gold/10">
+                            <img
+                                src={img}
+                                alt={`Gallery ${index + 1}`}
+                                loading="lazy"
+                                decoding="async"
+                                class="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+                            />
+                        </div>
+                    ))}
+                </div>
+            )
+        }
+
+        {
+            showGallerySlider && (
+                /* OPSI 2: IMAGE SWIPE SLIDER */
+                <div class="gallery-slider-wrapper">
+                    <div class="flex overflow-x-auto gap-4 snap-x snap-mandatory pb-4 scrollbar-hide">
+                        {sliderImages.map((img, index) => (
+                            <div class="flex-none w-72 md:w-96 snap-center aspect-3/4 overflow-hidden rounded-2xl shadow-xl border-2 border-gold/10">
+                                <img
+                                    src={img}
+                                    alt={`Gallery Slider ${index + 1}`}
+                                    class="w-full h-full object-cover"
+                                />
+                            </div>
+                        ))}
                     </div>
-                ))
-            }
-        </div>
-
-        <!-- OPSI 2: 6-IMAGE SWIPE SLIDER (Saat ini disembunyikan/comment out) -->
-
-        <!-- <div
-            class="flex overflow-x-auto gap-4 snap-x snap-mandatory pb-4 scrollbar-hide"
-        >
-            <div
-                class="flex-none w-72 md:w-96 snap-center aspect-[3/4] overflow-hidden rounded-2xl shadow-xl"
-            >
-                <img
-                    src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=2069&auto=format&fit=crop"
-                    class="w-full h-full object-cover"
-                />
-            </div>
-            <div
-                class="flex-none w-72 md:w-96 snap-center aspect-[3/4] overflow-hidden rounded-2xl shadow-xl"
-            >
-                <img
-                    src="https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2070&auto=format&fit=crop"
-                    class="w-full h-full object-cover"
-                />
-            </div>
-            <div
-                class="flex-none w-72 md:w-96 snap-center aspect-[3/4] overflow-hidden rounded-2xl shadow-xl"
-            >
-                <img
-                    src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=2070&auto=format&fit=crop"
-                    class="w-full h-full object-cover"
-                />
-            </div>
-            <div
-                class="flex-none w-72 md:w-96 snap-center aspect-[3/4] overflow-hidden rounded-2xl shadow-xl"
-            >
-                <img
-                    src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=687&auto=format&fit=crop"
-                    class="w-full h-full object-cover"
-                />
-            </div>
-            <div
-                class="flex-none w-72 md:w-96 snap-center aspect-[3/4] overflow-hidden rounded-2xl shadow-xl"
-            >
-                <img
-                    src="https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=2070&auto=format&fit=crop"
-                    class="w-full h-full object-cover"
-                />
-            </div>
-            <div
-                class="flex-none w-72 md:w-96 snap-center aspect-[3/4] overflow-hidden rounded-2xl shadow-xl"
-            >
-                <img
-                    src="https://images.unsplash.com/photo-1532712938310-34cb3982ef74?q=80&w=2070&auto=format&fit=crop"
-                    class="w-full h-full object-cover"
-                />
-            </div>
-        </div> -->
-        <!-- <p class="text-center text-sm text-gray-400 mt-4 italic">
-            Geser untuk melihat foto lainnya &rarr;
-        </p> -->
+                    <p class="text-center text-sm text-gray-400 mt-4 italic">
+                        Geser untuk melihat foto lainnya &rarr;
+                    </p>
+                </div>
+            )
+        }
     </div>
 </section>
 

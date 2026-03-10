@@ -27,7 +27,7 @@ const { groom, bride } = Astro.props;
 <section id="couple" class="py-20 bg-soft-white text-center px-4">
     <div class="max-w-6xl mx-auto">
         <h2 class="font-serif text-4xl md:text-5xl text-gold mb-12 italic">
-            The Happy Couple
+            Tentang Kita
         </h2>
 
         <div class="grid md:grid-cols-2 gap-12 items-stretch">
@@ -46,7 +46,8 @@ const { groom, bride } = Astro.props;
                 </div>
                 <h3 class="font-serif text-3xl text-gold mb-2">{groom.name}</h3>
                 <p class="text-[#333] mb-4 italic leading-relaxed">
-                    Putra dari {groom.parentFather} & <br /> {groom.parentMother}
+                    Putra dari {groom.parentFather} & <br />
+                    {groom.parentMother}
                 </p>
             </div>
 
@@ -65,7 +66,8 @@ const { groom, bride } = Astro.props;
                 </div>
                 <h3 class="font-serif text-3xl text-gold mb-2">{bride.name}</h3>
                 <p class="text-[#333] mb-4 italic leading-relaxed">
-                    Putri dari {bride.parentFather} & <br /> {bride.parentMother}
+                    Putri dari {bride.parentFather} & <br />
+                    {bride.parentMother}
                 </p>
             </div>
         </div>

@@ -47,8 +47,8 @@ const WEDDING_CONFIG = {
 	},
 	// // indonesia: Ganti foto background hero di sini
 	heroBackground: "/assets/bghero.jpg",
-	// // indonesia: Tambahkan atau ganti foto-foto gallery di sini
-	galleryImages: [
+	// // indonesia: Foto-foto khusus untuk layout Grid (kotak-kotak)
+	galleryGridImages: [
 		"/assets/slide1.jpg",
 		"/assets/slide2.jpg",
 		"/assets/slide3.jpg",
@@ -56,6 +56,18 @@ const WEDDING_CONFIG = {
 		"/assets/slide5.jpg",
 		"/assets/slide6.jpg",
 	],
+	// // indonesia: Foto-foto khusus untuk layout Slider (geser)
+	gallerySliderImages: [
+		"/assets/slide1.jpg",
+		"/assets/slide2.jpg",
+		"/assets/slide3.jpg",
+		"/assets/slide4.jpg",
+		"/assets/slide5.jpg",
+		"/assets/slide6.jpg",
+	],
+	// // indonesia: Aktifkan (true) atau Nonaktifkan (false) layout Gallery
+	showGalleryGrid: true,
+	showGallerySlider: true,
 };
 ---
 
@@ -81,7 +93,7 @@ const WEDDING_CONFIG = {
 		{SECTION_VISIBILITY.quote && <Quote />}
 		{SECTION_VISIBILITY.couple && <Couple {...WEDDING_CONFIG} />}
 		{SECTION_VISIBILITY.story && <Story />}
-		{SECTION_VISIBILITY.gallery && <Gallery {...WEDDING_CONFIG} />}
+		{SECTION_VISIBILITY.gallery && <Gallery {...(WEDDING_CONFIG as any)} />}
 		{SECTION_VISIBILITY.event && <Event {...WEDDING_CONFIG} />}
 		{SECTION_VISIBILITY.countdown && <Countdown />}
 		{SECTION_VISIBILITY.rsvp && <RSVP />}
