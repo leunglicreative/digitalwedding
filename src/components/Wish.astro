@@ -150,29 +150,43 @@
     async function getWishes() {
         if (useSupabase) {
             try {
-                const { data, error } = await supabase
+                console.log("Attempting to fetch from 'wish' table...");
+                let { data, error } = await supabase
                     .from("wish")
                     .select("*")
                     .order("created_at", { ascending: false });
 
-                if (error) {
-                    console.error("Supabase Wish Fetch Error Code:", error.code);
-                    console.error("Supabase Wish Fetch Error Message:", error.message);
-                    throw error;
+                // Jika tabel 'wish' tidak ada atau kosong, coba 'wishes'
+                if (error || !data || data.length === 0) {
+                    if (error) console.warn("Fetch from 'wish' error/empty:", error.message);
+                    console.log("Attempting to fetch from 'wishes' table as fallback...");
+                    const fallback = await supabase
+                        .from("wishes")
+                        .select("*")
+                        .order("created_at", { ascending: false });
+                    
+                    if (!fallback.error && fallback.data && fallback.data.length > 0) {
+                        data = fallback.data;
+                        console.log("Successfully fetched from 'wishes' fallback.");
+                    }
                 }
-                console.log("Supabase Wish Data fetched:", data);
+
+                if (data && data.length > 0) {
+                    console.log("Supabase Data found! Row structure example:", data[0]);
+                    console.log("Available keys:", Object.keys(data[0]));
+                } else {
+                    console.log("No data returned from either 'wish' or 'wishes' tables.");
+                }
+
                 return data || [];
             } catch (error) {
-                console.error("Error fetching wishes from Supabase:", error);
-                // Fallback ke localStorage jika Supabase gagal agar tetap ada tampilan
+                console.error("Critical error in getWishes:", error);
                 const saved = localStorage.getItem("wedding_wishes");
                 return saved ? JSON.parse(saved) : [];
             }
         } else {
-            // Mode fallback menggunakan localStorage jika tidak memakai database
             const saved = localStorage.getItem("wedding_wishes");
             const wishes = saved ? JSON.parse(saved) : [];
-            // Pastikan diurutkan terbaru (berdasarkan id/timestamp jika tidak ada created_at)
             return wishes.sort((a: any, b: any) => (b.id || 0) - (a.id || 0));
         }
     }
